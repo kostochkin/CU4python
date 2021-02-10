@@ -1,6 +1,6 @@
 # cu4python
 
-An example of communication with cu4 using Python.
+An example of communication with CU4 using Python.
 
 There are two files: example.py and examplelib.py
 
@@ -19,7 +19,7 @@ Note that this is not a complete library.
 # example.py
 
 This script shows an example how classes work together.
-It creates Cu4ServersList instance. Then it run simple script each device on each server:
+It creates Cu4ServersList instance. Then it run simple script for each device on each server:
 - It initializes the device
 - It gets data from the device
 - If device is thermometer it does useless example work.
