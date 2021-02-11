@@ -1,4 +1,4 @@
-from examplelib import *
+from cu4lib.server import *
 
 servers = Cu4ServersList(host_ip=HostIp())
 
