@@ -48,14 +48,7 @@ class Cu4ServersList:
             print("Enumerating...")
             while 1:
                 try:
-                    conn, adp = tcpsocket.accept()
-                    data = conn.recv(1024).decode()
-                    print("Got datagram: {}".format(data))
-                    addr, _ = adp
-                    if addr in data.split(";"):
-                        print("Found server: {}".format(addr))
-                        cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
-                        new_list.append((addr, cu4Server))
+                    new_list += self._incoming_to_servers_list(tcpsocket)
                 except socket.timeout:
                     if not new_list:
                         print("Servers not found")
@@ -66,7 +59,18 @@ class Cu4ServersList:
             udpsocket.close()
         self._list = new_list
         return self._list
-       
+    
+    def _incoming_to_servers_list(self, tcpsocket):
+        conn, adp = tcpsocket.accept()
+        data = conn.recv(1024).decode()
+        print("Got datagram: {}".format(data))
+        addr, _ = adp
+        if addr in data.split(";"):
+            print("Found server: {}".format(addr))
+            cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
+            return [(addr, cu4Server)]
+        return []
+
     def _send_broadcast(self, udpsocket):
         udpsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         udpsocket.settimeout(self._timeout)
