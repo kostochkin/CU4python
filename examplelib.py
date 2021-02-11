@@ -40,39 +40,44 @@ class Cu4ServersList:
     def _enumerate_servers(self):
         new_list = []
         print("Searching for servers...")
-        tcpsocket = self._make_tcp_ip_socket()
+        tcpsocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         udpsocket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
-        udpsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-        udpsocket.settimeout(1)
-        udpsocket.bind(("", self._base_port))
-        udpsocket.sendto(self._ip.value().encode(), ('<broadcast>', self._base_port + 1))
-        print("Enumerating...")
-        while 1:
-            try:
-                conn, adp = tcpsocket.accept()
-                data = conn.recv(1024)
-                addr, _ = adp
-                print("Got ip: {}".format(addr))
-                cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
-                new_list.append((addr, cu4Server))
-            except socket.timeout:
-                if not new_list:
-                    print("Servers not found")
-                break
-        tcpsocket.close()
-        udpsocket.close()
+        try:
+            self._bind_and_listen(tcpsocket)
+            self._send_broadcast(udpsocket)
+            print("Enumerating...")
+            while 1:
+                try:
+                    conn, adp = tcpsocket.accept()
+                    data = conn.recv(1024)
+                    addr, _ = adp
+                    print("Got ip: {}".format(addr))
+                    cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
+                    new_list.append((addr, cu4Server))
+                except socket.timeout:
+                    if not new_list:
+                        print("Servers not found")
+                    break
+        finally:
+            print("Cleanup")
+            tcpsocket.close()
+            udpsocket.close()
         self._list = new_list
         return self._list
        
-    def _make_tcp_ip_socket(self):
+    def _send_broadcast(self, udpsocket):
+        udpsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+        udpsocket.settimeout(self._timeout)
+        udpsocket.bind(("", self._base_port))
+        udpsocket.sendto(self._ip.value().encode(), ('<broadcast>', self._base_port + 1))
+
+    def _bind_and_listen(self, serversocket):
         port = self._base_port + 2
         ip = self._ip.value()
         print("Run listener on: {}:{}".format(ip, port))
-        serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         serversocket.bind((ip, port))
         serversocket.listen(5)
         serversocket.settimeout(self._timeout)
-        return serversocket
 
     def __iter__(self):
         return map(lambda x: x[1], self.value())
