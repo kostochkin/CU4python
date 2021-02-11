@@ -49,11 +49,13 @@ class Cu4ServersList:
             while 1:
                 try:
                     conn, adp = tcpsocket.accept()
-                    data = conn.recv(1024)
+                    data = conn.recv(1024).decode()
+                    print("Got datagram: {}".format(data))
                     addr, _ = adp
-                    print("Got ip: {}".format(addr))
-                    cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
-                    new_list.append((addr, cu4Server))
+                    if addr in data.split(";"):
+                        print("Found server: {}".format(addr))
+                        cu4Server = CU4Server(ip=HostIp(addr), port=self._base_port)
+                        new_list.append((addr, cu4Server))
                 except socket.timeout:
                     if not new_list:
                         print("Servers not found")
