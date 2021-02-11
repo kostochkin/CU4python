@@ -7,11 +7,11 @@ for s in servers:
         d.init()
         print(d.data())
         if (d.__class__ == CU4DeviceTDM):
-            print(d.thermometer_state())
+            print(d.is_thermometer_on())
             print(d.set_thermometer_on())
-            print(d.thermometer_state())
+            print(d.is_thermometer_on())
             print(d.set_thermometer_off())
-            print(d.thermometer_state())
+            print(d.is_thermometer_on())
             
 
 
