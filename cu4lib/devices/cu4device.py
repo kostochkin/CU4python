@@ -44,6 +44,14 @@ class CU4Device:
         self._logger.debug("Getting data for", self)
         return self._send_command("DATA?")
 
+    def dev_type(self):
+        """ SCPI prefix of the device
+        Returns
+        _______
+        prefix : string
+        """
+        raise UnknownDevice("Device must have prefix")
+
     def __str__(self):
         """ custom str """
         return "{}:{}:{}".format(self.__class__.__name__, self._cu4server.ip().value(), self._address)
@@ -60,34 +68,29 @@ class CU4Device:
     def _send_command(self, cmd):
         return self._cu4server.send_scpi("{}:{}".format(self._dev_prefix(), cmd)).strip()
 
-    def dev_type(self):
-        """ SCPI prefix of the device
-        Returns
-        _______
-        prefix : string
-        """
-        raise UnknownDevice("Device must have prefix")
+    def _get_bool(self, cmd):
+        return self._send_command(cmd) == "1"
+    
+    def _set_bool(self, cmd, value):
+        if value:
+            val = 1
+        else:
+            val = 0
+        return self._send_command("{} {}".format(cmd, val))
+
+    def _get_float(self, cmd):
+        res = self._send_command(cmd)
+        try:
+            return float(res)
+        except ValueError:
+            return None
+
+    def _set_float(self, cmd, val):
+        return self._send_command("{} {}".format(cmd, val))
 
 
 class CU4DeviceSDM(CU4Device):
     def dev_type(self):
         return "SSPD"
 
-
-class CU4DeviceTDM(CU4Device):
-    def dev_type(self):
-        return "TEMD"
-
-    def thermometer(self, enable=None):
-        if enable is None:
-            return
-
-
-        return self._send_command("THON 1")
-
-    def set_thermometer_off(self):
-        return self._send_command("THON 0")
-
-    def is_thermometer_on(self):
-        return self._send_command("THON?") == "1"
 

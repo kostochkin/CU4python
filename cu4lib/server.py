@@ -1,6 +1,7 @@
 import socket
 from cu4lib.simplelog import StdioLogger
-from cu4lib.devices.cu4device import CU4Device, CU4DeviceSDM, CU4DeviceTDM
+from cu4lib.devices.cu4device import CU4Device, CU4DeviceSDM
+from cu4lib.devices.tdm import CU4DeviceTDM
 
 class HostIp:
     def __init__(self, addr=None, logger=StdioLogger()):
