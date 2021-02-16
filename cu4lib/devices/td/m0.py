@@ -1,4 +1,3 @@
-import json
 from cu4lib.devices.cu4device import CU4Device
 from cu4lib.simplelog import StdioLogger
 
@@ -183,6 +182,7 @@ class CU4DeviceTDMConstantCopy:
     def __iter__(self):
         return iter(self._lst)
 
+
 class CU4DeviceTDMConstants:
     """ CU4DeviceTDMConstants is intended to get and set any constant instantly """
     def __init__(self, cu4device):
@@ -191,7 +191,6 @@ class CU4DeviceTDMConstants:
             :cu4device CU4Device:
         """
         self._cu4device = cu4device
-        self._json_p = None
 
     def copy(self):
         """ Obtain a copy of all constants
@@ -267,11 +266,6 @@ class CU4DeviceTDMConstants:
         """ CU4DeviceTDMConstant """
         return CU4DeviceTDMConstant(self._cu4device, "Pressure")
 
-    def _json(self):
-        if self._json_p is None:
-            self._json_p = json.loads(self._json_str)
-        return self._json_p
-    
     def __repr__(self):
         return "<{}(...lazy...)>".format(self.__class__.__name__)
 
