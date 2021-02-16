@@ -37,6 +37,7 @@ class CU4Device:
         self._logger.debug(res)
         return res == "OK"
 
+    @property
     def data(self):
         """ Fetching all data
 

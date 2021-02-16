@@ -2,6 +2,7 @@ import socket
 from cu4lib.simplelog import StdioLogger
 from cu4lib.devices.cu4device import CU4Device, CU4DeviceSDM
 from cu4lib.devices.temperature_drivers import CU4DeviceTDM0
+from cu4lib.devices.sd.m0 import CU4DeviceSDM0
 
 class HostIp:
     def __init__(self, addr=None, logger=StdioLogger()):
@@ -170,10 +171,10 @@ class CU4Module:
         part = dev_type[:7]
         dev = CU4Device
         if part == "CU4SDM0":
-            dev = CU4DeviceSDM
+            dev = CU4DeviceSDM0
         elif part == "CU4TDM0":
             dev = CU4DeviceTDM0
-        # Not implemented in testing invironment
+        # Not implemented in testing environment
         # elif part == "CU4TDM1":
         #    dev = CU4DeviceTDM1
         return dev(cu4server, address)

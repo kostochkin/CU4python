@@ -16,7 +16,12 @@ for s in servers:
     print(s.modules)
 
     for d in s.modules:
+        if (d.__class__ == CU4DeviceSDM0):
+            d.init()
+            print(d.data)
+            #quit()
         if (d.__class__ == CU4DeviceTDM0):
+            #continue
             d.init()
             d.thermometer.enabled
             d.thermometer.enabled = True
@@ -56,10 +61,10 @@ for s in servers:
             d._get_json("PRSC?")
             print(list(d.temperature_table))
             print(d.temperature_table.copy().dict())
-            print(d.data())
+            print(d.data)
             d.thermometer.enabled = False
-            print(d.data().commutator_on)
-            print(d.data())
+            print(d.data.commutator_on)
+            print(d.data)
             d.temperature_table = tdm.TemperatureTableCopy([tdm.TemperaturePoint((3*x,x/100)) for x in range(1,101)])
             print(d.temperature_table.copy().dict())
             

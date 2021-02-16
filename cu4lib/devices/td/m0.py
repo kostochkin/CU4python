@@ -24,8 +24,9 @@ class CU4DeviceTDM0(CU4Device):
     def dev_type(self):
         return "TEMD"
 
+    @property
     def data(self):
-        return ThermometerData(super().data())
+        return ThermometerData(super().data)
 
     @property
     def thermometer(self):
