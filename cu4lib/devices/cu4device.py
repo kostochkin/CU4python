@@ -1,7 +1,10 @@
+import json
 from cu4lib.simplelog import StdioLogger
+
 
 class UnknownDevice(BaseException):
     pass
+
 
 class CU4Device:
     """Base class for devices"""
@@ -16,7 +19,7 @@ class CU4Device:
             address of device on CU4 bus. Can be obtained using SCPI. See manual
         :param logger : Logger
             a logger instance. Any object that have several log functions.
-            Use cu4lib.simplelog.StdioLogger implementation as reference.
+            Use cu4lib.simplelog.StdioLogger implementation as a reference.
         """
         self._cu4server = cu4server
         self._address = address
@@ -39,10 +42,10 @@ class CU4Device:
 
         Returns
         _______
-        result : Json
+        result : dict
         """
         self._logger.debug("Getting data for", self)
-        return self._send_command("DATA?")
+        return json.loads(self._send_command("DATA?"))
 
     def dev_type(self):
         """ SCPI prefix of the device
@@ -54,7 +57,7 @@ class CU4Device:
 
     def __str__(self):
         """ custom str """
-        return "{}:{}:{}".format(self.__class__.__name__, self._cu4server.ip().value(), self._address)
+        return "{}:{}:{}".format(self.__class__.__name__, self._cu4server.ip().value, self._address)
     
     def __repr__(self):
         """ custom repr """
@@ -87,6 +90,16 @@ class CU4Device:
 
     def _set_float(self, cmd, val):
         return self._send_command("{} {}".format(cmd, val))
+
+    def _get_json(self, cmd):
+        res = self._send_command(cmd)
+        try:
+            return json.loads(res)
+        except json.decoder.JSONDecodeError:
+            return None
+    
+    def _set_json(self, cmd, v):
+        return self._send_command("{} {}".format(cmd, json.dumps(v)))
 
 
 class CU4DeviceSDM(CU4Device):

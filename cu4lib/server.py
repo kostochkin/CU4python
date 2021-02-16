@@ -1,13 +1,15 @@
 import socket
 from cu4lib.simplelog import StdioLogger
 from cu4lib.devices.cu4device import CU4Device, CU4DeviceSDM
-from cu4lib.devices.tdm import CU4DeviceTDM
+from cu4lib.devices.temperature_drivers import CU4DeviceTDM0
 
 class HostIp:
     def __init__(self, addr=None, logger=StdioLogger()):
         self._ip = addr
+        self._auto = False
         self._logger = logger
 
+    @property
     def value(self):
         if self._ip is None:
             self._ip = self._detect_ip()
@@ -18,7 +20,7 @@ class HostIp:
         try:
             self._logger.debug("Trying to detect my IP address")
             # Any non-localhost address even non-exsiting
-            s.connect(('10.255.255.255', 1))
+            s.connect(('8.8.8.8', 1))
             IP = s.getsockname()[0]
         except Exception:
             self._logger.warn("Failed. Using localhost.")
@@ -26,7 +28,16 @@ class HostIp:
         finally:
             self._logger.debug("Got IP", IP)
             s.close()
+        self._auto = True
         return IP
+
+    def __repr__(self):
+        v = self.value
+        if self._auto:
+            a = "Auto"
+        else:
+            a = "Manual"
+        return "<{}IP={}>".format(a, v)
 
 
 class Cu4ServersList:
@@ -80,11 +91,11 @@ class Cu4ServersList:
         udpsocket.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         udpsocket.settimeout(self._timeout)
         udpsocket.bind(("", self._base_port))
-        udpsocket.sendto(self._ip.value().encode(), ('<broadcast>', self._base_port + 1))
+        udpsocket.sendto(self._ip.value.encode(), ('<broadcast>', self._base_port + 1))
 
     def _bind_and_listen(self, serversocket):
         port = self._base_port + 2
-        ip = self._ip.value()
+        ip = self._ip.value
         self._logger.debug("Run listener on", ip, ":", port)
         serversocket.bind((ip, port))
         serversocket.listen(5)
@@ -93,43 +104,77 @@ class Cu4ServersList:
     def __iter__(self):
         return map(lambda x: x[1], self.value())
 
+    def __repr__(self):
+        a = map(repr, self)
+        return "<Cu4ServersList [{}]>".format(", ".join(a))
+
 
 class CU4Server:
-    def __init__(self, ip, port=9876, logger=StdioLogger()):
+    def __init__(self, ip, port=9876, logger=StdioLogger(), timeout=3):
         self._ip = ip
         self._port = port
         self._logger = logger
+        self._timeout = timeout
 
     def send_scpi(self, command):
         self._logger.debug("Sending", command)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        addr = (self._ip.value(), self._port)
+        sock.settimeout(self._timeout)
+        addr = (self._ip.value, self._port)
+        s = b''
         try:
             sock.connect(addr)
             sock.sendto(command.encode(), addr)
-            return sock.recv(1024).decode()
+            while (s[-2:] != b'\r\n'): 
+                s += sock.recv(4196)
+            self._logger.debug("Received ({})".format(len(s)), s)
+            return s.decode()
+        except socket.timeout:
+            self._logger.error("Socket timeout")
+            return "Server timeout"
         finally:
             sock.close()
 
-    def devices(self):
-        devsb = self.send_scpi("SYST:DEVL?").strip().split("\r\n;<br>")
-        return map(self._dev_from_string, devsb[1:])
+    @property
+    def modules(self):
+        return CU4ModulesList(self)
+
+    def ip(self):
+        return self._ip
+
+    def __repr__(self):
+        return "<CU4Server ip={}>".format(self._ip)
+
+
+class CU4ModulesList:
+    def __init__(self, cu4server):
+        self._cu4server = cu4server
+
+    def __iter__(self):
+        devsb = self._cu4server.send_scpi("SYST:DEVL?").strip().split("\r\n;<br>")
+        return iter(map(self._dev_from_string, devsb[1:]))
 
     def _dev_from_string(self, s):
         params = s.split(": ")
         address = params[1][8:]
         dev_type = params[2][5:]
-        return get_dev_class(dev_type)(self, address)
+        return CU4Module(dev_type, self._cu4server, address)
 
-    def ip(self):
-        return self._ip
+    def __str__(self):
+        return "<CU4ModulesList [{}]>".format(", ".join(map(str, self)))
 
 
-def get_dev_class(dev_type):
-    part = dev_type[:6]
-    dev = CU4Device
-    if part == "CU4SDM":
-        dev = CU4DeviceSDM
-    elif part == "CU4TDM":
-        dev = CU4DeviceTDM
-    return dev
+class CU4Module:
+    def __new__(self, dev_type, cu4server, address):
+        print(dev_type)
+        part = dev_type[:7]
+        dev = CU4Device
+        if part == "CU4SDM0":
+            dev = CU4DeviceSDM
+        elif part == "CU4TDM0":
+            dev = CU4DeviceTDM0
+        # Not implemented in testing invironment
+        # elif part == "CU4TDM1":
+        #    dev = CU4DeviceTDM1
+        return dev(cu4server, address)
+

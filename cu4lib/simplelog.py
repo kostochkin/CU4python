@@ -1,15 +1,35 @@
 import sys
 
 class StdioLogger:
+    def __init__(self, take=None):
+        self._strip = take
+
     def debug(self, *args):
-        print("[DEBUG]", *args, sep=" ", file=sys.stdout)
+        self._print(sys.stdout, "DEBUG", *args)
     
     def warn(self, *args):
-        print("[WARN]", *args, sep=" ", file=sys.stderr)
+        self._print(sys.stderr, "WARN", *args)
     
     def error(self, *args):
-        print("[ERROR]", *args, sep=" ", file=sys.stderr)
+        self._print(sys.stderr, "ERROR", *args)
 
     def info(self, *args):
-        print("[info]", *args, sep=" ", file=sys.stderr)
+        self._print(sys.stdout, "INFO", *args)
+
+    def _print(self, file, type, *args):
+        print("[{}]".format(type), *self._strip_all(args), sep=" ", file=file)
+
+    def _strip_all(self, args):
+        if self._strip is None:
+            return args
+        else:
+            return list(map(self._strip_one, args))
+    
+    def _strip_one(self, arg):
+        if type(arg) == bytes and len(arg) > self._strip:
+            return arg[:self._strip] + b' <<<stripped'
+        elif type(arg) == str and len(arg) > self._strip:
+            return arg[:self._strip] + ' <<<stripped'
+        return arg
+
 
