@@ -14,6 +14,7 @@ class CU4DeviceTDM0(CU4Device):
         :thermometer Thermometer:
         :pressure_meter PressureMeter:
         :constants CU4DeviceTDMConstants:
+        :temperature_table TemperatureTable:
     """
     
     _thermometer = None
@@ -26,7 +27,7 @@ class CU4DeviceTDM0(CU4Device):
 
     @property
     def data(self):
-        return ThermometerData(super().data)
+        return CU4DeviceTDM0(super().data)
 
     @property
     def thermometer(self):
@@ -45,6 +46,8 @@ class CU4DeviceTDM0(CU4Device):
     @property
     def constants(self):
         """ :constants CU4DeviceTDMConstants:
+            Warning! Damage is possible. Constants are used to configure the module.
+            Do not modify them unless you know what are you doing.
             
             Assignment
             ----------
@@ -62,6 +65,8 @@ class CU4DeviceTDM0(CU4Device):
     @property
     def temperature_table(self):
         """ :temperature_table TemperatureTable:
+            Warning! Damage is possible. Temperature table is a temperature sensor calabration table.
+            Do not modify it unless you know what are you doing.
 
             Assignment
             ----------
@@ -83,6 +88,8 @@ class CU4DeviceTDM0(CU4Device):
 
 class CU4DeviceTDMConstantsCopy:
     """ CU4DeviceTDMConstantsCopy is intended to set all constants of the CU4DeviceTDM atomically.
+        Warning! Damage is possible. Constants are used to configure the module.
+        Do not modify them unless you know what are you doing.
         
         Using example
         -------------
@@ -137,6 +144,8 @@ class CU4DeviceTDMConstantsCopy:
 
 class CU4DeviceTDMConstantCopy:
     """ CU4DeviceTDMConstantsCopy is intended to store slope and intercept values of a constant.
+        Warning! Damage is possible. Constants are used to configure the module.
+        Do not modify it unless you know what are you doing.
         
         Using example
         -------------
@@ -272,7 +281,10 @@ class CU4DeviceTDMConstants:
 
 
 class CU4DeviceTDMConstant:
-    """ CU4DeviceTDMConstant is intended to get and set the constant instantly """
+    """ CU4DeviceTDMConstant is intended to get and set the constant instantly
+        Warning! Damage is possible. Constants are used to configure the module.
+        Do not modify it unless you know what are you doing.
+    """
 
     def __init__(self, cu4server, name):
         self._cu4server = cu4server
@@ -429,8 +441,8 @@ class ThermometerBias:
         return self._cu4device._get_float("VOLT?")
 
 
-class ThermometerData:
-    """ Contains all data of CU4DeviceTDM """
+class CU4DeviceTDM0Data:
+    """ Contains all data of CU4DeviceTDM0 """
     def __init__(self, dct):
         """ Parameters
             ----------
@@ -478,7 +490,11 @@ class ThermometerData:
 
 
 class TemperatureTable:
-    """ Temperature table is an iterator that contains TemperaturePoint """
+    """ Temperature table is an iterator that contains TemperaturePoint
+        Warning! Damage is possible. Temperature table is a temperature sensor calabration table.
+        Do not modify it unless you know what are you doing.
+    """
+
     def __init__(self, cu4device):
         self._cu4device = cu4device
 
@@ -492,6 +508,8 @@ class TemperatureTable:
 class TemperatureTableCopy:
     """ Temperature table copy is intended to modify the table in module.
         Note that it must contain exactly 100 points.
+        Warning! Damage is possible. Temperature table is a temperature sensor calabration table.
+        Do not modify it unless you know what are you doing.
     """
     def __init__(self, tbl):
         self._tbl = tbl
