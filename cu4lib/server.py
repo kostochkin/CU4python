@@ -1,8 +1,8 @@
 import socket
 from cu4lib.simplelog import StdioLogger
-from cu4lib.devices.cu4device import CU4Device, CU4DeviceSDM
-from cu4lib.devices.temperature_drivers import CU4DeviceTDM0
-from cu4lib.devices.sd.m0 import CU4DeviceSDM0
+from cu4lib.devices.td.m0 import CU4TDM0
+from cu4lib.devices.sd.m0 import CU4SDM0
+from cu4lib.servers.cu4module_server import SCPI, CU4ModuleServer
 
 class HostIp:
     def __init__(self, addr=None, logger=StdioLogger()):
@@ -106,8 +106,8 @@ class Cu4ServersList:
         return map(lambda x: x[1], self.value())
 
     def __repr__(self):
-        a = map(repr, self)
-        return "<Cu4ServersList [{}]>".format(", ".join(a))
+        a = ", ".join(map(repr, self))
+        return f"[{a}]"
 
 
 class CU4Server:
@@ -118,14 +118,15 @@ class CU4Server:
         self._timeout = timeout
 
     def send_scpi(self, command):
-        self._logger.debug("Sending", command)
+        encoded = command.encode()
+        self._logger.debug("Sending", encoded)
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.settimeout(self._timeout)
         addr = (self._ip.value, self._port)
         s = b''
         try:
             sock.connect(addr)
-            sock.sendto(command.encode(), addr)
+            sock.sendto(encoded, addr)
             while (s[-2:] != b'\r\n'): 
                 s += sock.recv(4196)
             self._logger.debug("Received ({})".format(len(s)), s)
@@ -167,15 +168,16 @@ class CU4ModulesList:
 
 class CU4Module:
     def __new__(self, dev_type, cu4server, address):
-        print(dev_type)
+        scpi = SCPI(cu4server)
         part = dev_type[:7]
-        dev = CU4Device
         if part == "CU4SDM0":
-            dev = CU4DeviceSDM0
+            dev = CU4SDM0
         elif part == "CU4TDM0":
-            dev = CU4DeviceTDM0
+            dev = CU4TDM0
+        else:
+            raise Exception(f"Not implemented: {dev_type}")
         # Not implemented in testing environment
         # elif part == "CU4TDM1":
         #    dev = CU4DeviceTDM1
-        return dev(cu4server, address)
+        return dev(CU4ModuleServer(scpi, address, dev_type))
 
