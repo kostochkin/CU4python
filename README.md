@@ -23,7 +23,7 @@ This library contains several auxiliary classes:
 
 ### class HostIp
 
-This class encapsulates Ip address of any host. It also helps determines Ip address of client.
+This class encapsulates IP address of any host. It also helps to determine IP address of client.
 
 #### Example:
 
