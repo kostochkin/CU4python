@@ -14,9 +14,8 @@ Each class has own docstrings. Use help() function to get description of these c
 
 ### Example
 
-    $ python
-    > from cu4lib.devices.td.m0 import CU4TDM0
-    > help(CU4TDM0)
+    > import CU4lib as cu
+    > help(cu.CU4TDM0)
 
 ## Auxiliary Classes
 
@@ -28,10 +27,13 @@ This class encapsulates Ip address of any host. It also helps determines Ip addr
 
 #### Example:
 
-	ip1 = HostIp()
-	print(ip.value)
-	ip2 = HostIp("127.0.0.1")
-	print(ip.value)
+    	> import CU4lib as cu
+	> ip1 = HostIp()
+	> print(ip.value)
+ 	.....
+	> ip2 = HostIp("127.0.0.1")
+	> print(ip.value)
+	.....
 
 ### class Cu4ServersList
 
