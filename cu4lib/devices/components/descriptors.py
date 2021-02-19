@@ -10,17 +10,18 @@ class CU4ValueError(Exception):
 
 
 class CU4Component:
-    def __init__(self, c_class):
+    def __init__(self, c_class, channel=None):
         self._c_class = c_class
         self._name = None
         self.__doc__ = c_class.__doc__
+        self._channel = channel
 
     def __set_name__(self, o, n):
         self._name = n
 
     def __get__(self, o, t=None):
         if not hasattr(o._components, self._name):
-            setattr(o._components, self._name, self._c_class(o._serv))
+            setattr(o._components, self._name, self._c_class(o._serv, self._channel))
         return getattr(o._components, self._name)
 
     def __set__(self, o, v):
@@ -37,10 +38,16 @@ class CU4Value:
         self._name = n
 
     def __get__(self, o, n=None):
-        return o._serv.get([self._cmd], gen=self._gen)
+        return o._serv.get([self._channelize(o)], gen=self._gen)
 
     def __set__(self, o, v):
-        o._serv.set([self._cmd], [v], gen=self._gen)
+        o._serv.set([self._channelize(o)], [v], gen=self._gen)
+
+    def _channelize(self, o):
+        if o._channel is None:
+            return self._cmd
+        else:
+            return f"{self._cmd}{o._channel}"
 
 
 class CU4DictValue(CU4Value):
@@ -120,18 +127,36 @@ class CU4ReadOnly:
         raise CU4ValueError(f"Can't set read only value {cls_name}.{name}")
 
 
+class CU4WriteOnly:
+    def __init__(self, value):
+        self._v = value
+        self.__doc__ = self._v.__doc__ + " (write-only)"
+
+    def __set_name__(self, o, n):
+        self._v.__set_name__(o, n)
+
+    def __get__(self, o, n=None):
+        cls_name = self._v.__class__.__name__
+        name = self._v._name
+        raise CU4ValueError(f"Can't read write only value {cls_name}.{name}")
+
+    def __set__(self, o, v):
+        return self._v.__set__(o, v)
+
+
 class Components:
     pass
 
 
 class CU4ComponentContainer:
-    def __init__(self, scpi_serv):
+    def __init__(self, scpi_serv, channel=None):
         """ Parameters
             ----------
             :scpi_serv SCPI:
         """
         self._serv = scpi_serv
         self._components = Components()
+        self._channel = channel
 
     def _set_override_ro(self, name, v):
         vars(self.__class__)[name]._v.__set__(self, v)

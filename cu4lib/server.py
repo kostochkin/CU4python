@@ -174,10 +174,9 @@ class CU4Module:
             dev = CU4SDM0
         elif part == "CU4TDM0":
             dev = CU4TDM0
+        elif part == "CU4TDM1":
+            dev = CU4TDM1
         else:
             raise Exception(f"Not implemented: {dev_type}")
-        # Not implemented in testing environment
-        # elif part == "CU4TDM1":
-        #    dev = CU4DeviceTDM1
         return dev(CU4ModuleServer(scpi, address, dev_type))
 

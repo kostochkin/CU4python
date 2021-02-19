@@ -5,6 +5,41 @@ from cu4lib.devices.components.descriptors import CU4ValueError
 import cu4lib.devices.td.m0 as m
 import cu4lib.devices.sd.m0 as sspd
 
+# Mock tests
+from cu4lib.test.mockm1server import CU4TM1ServerMock
+from cu4lib.devices.td.m1 import CU4TDM1
+from cu4lib.servers.cu4module_server import CU4ModuleServer, SCPI
+
+tdm1 = CU4TDM1(CU4ModuleServer(SCPI(CU4TM1ServerMock()), 0, "CU4TDM1"))
+print(tdm1.thermometer0.temperature)
+print(tdm1.thermometer1.temperature)
+print(tdm1.thermometer2.temperature)
+print(tdm1.thermometer3.temperature)
+tdm1.thermometer0.current = 10
+tdm1.thermometer1.current = 10
+tdm1.thermometer2.current = 10
+tdm1.thermometer3.current = 10
+try:
+    print(tdm1.thermometer0.current)
+    print(tdm1.thermometer1.current)
+    print(tdm1.thermometer2.current)
+    print(tdm1.thermometer3.current)
+except CU4ValueError:
+    print("ok!")
+print(tdm1.thermometer0.voltage)
+print(tdm1.thermometer1.voltage)
+print(tdm1.thermometer2.voltage)
+print(tdm1.thermometer3.voltage)
+try:
+    tdm1.thermometer0.voltage = 10
+    tdm1.thermometer1.voltage = 10
+    tdm1.thermometer2.voltage = 10
+    tdm1.thermometer3.voltage = 10
+except CU4ValueError:
+    print("ok!")
+    
+# End mock
+
 servers = Cu4ServersList(host_ip=HostIp(), logger=StdioLogger(take=32))
 
 print(servers)

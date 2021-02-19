@@ -48,7 +48,7 @@ class CU4ModuleServer:
 
     def set(self, cmd_l, param_l, gen=False):
         self._serv.set(self._prefix(gen) + cmd_l, param_l)
-    
+   
     def _prefix(self, gen):
         return ["GEN" if gen else self._type.prefix, self._dev]
 
