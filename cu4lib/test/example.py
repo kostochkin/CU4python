@@ -51,9 +51,11 @@ for s in servers:
     print(s.modules)
 
     for d in s.modules:
+        d.init()
+        print(d.id)
+        print(d.data)
+        print(d.last_error)
         if (d.__class__ == sspd.CU4SDM0):
-            d.init()
-            print(d.data)
             # Autorecovery test
             print(d.auto_recovery.counts)
             d.auto_recovery.reset_counts()
@@ -110,8 +112,6 @@ for s in servers:
             d.shorted = not d.shorted
             print(d.shorted)
         if (d.__class__ == CU4TDM0):
-            d.init()
-            print(d.data)
             # thermometer tests
             d.thermometer.enabled = not d.thermometer.enabled
             print(d.thermometer.enabled)

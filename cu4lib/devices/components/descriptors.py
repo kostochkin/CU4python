@@ -50,6 +50,22 @@ class CU4Value:
             return f"{self._cmd}{o._channel}"
 
 
+class CU4Gen:
+    """"""
+    def __init__(self, val):
+        self._v = val
+        self._v._gen = True
+
+    def __set_name__(self, o, n):
+        self._v.__set_name__(o, n)
+
+    def __get__(self, o, n=None):
+        return self._v.__get__(o, n)
+
+    def __set__(self, o, v):
+        self._v.__set__(o, v)
+
+
 class CU4DictValue(CU4Value):
     """ dict (with JSON repr) """
 
@@ -163,8 +179,23 @@ class CU4ComponentContainer:
 
 
 class CU4Module(CU4ComponentContainer):
+    """ General properties
+        
+        Properties
+        ----------
+        :data dict:
+        :id str:
+        :err str"
+    """
     data = CU4ReadOnly(CU4DictValue("DATA"))
+    id = CU4ReadOnly(CU4Gen(CU4Value("DID")))
+    last_error = CU4ReadOnly(CU4Gen(CU4Value("ERR")))
+
 
     def init(self):
         """ Module hardware initialization """
         self._serv.set(["INIT"], [], gen=True)
+    
+    def reboot(self):
+        """ Reboot module  """
+        self._serv.set(["BOOT"], [], gen=True)
