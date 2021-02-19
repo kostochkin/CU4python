@@ -1,4 +1,9 @@
-from cu4lib.devices.components.container import CU4ComponentContainer, FloatValue, BoolValue
+from cu4lib.devices.components.descriptors import (
+        CU4ComponentContainer,
+        CU4FloatValue,
+        CU4BoolValue
+    )
+
 
 class CU4Comparator(CU4ComponentContainer):
     """ Representing Comparator
@@ -7,14 +12,5 @@ class CU4Comparator(CU4ComponentContainer):
         :enabled bool: enable/disable the comparator
         :level float: the value of the trigger level for comparator
     """
-
-    @CU4ComponentContainer.value("CLE", BoolValue, writable=True)
-    def enabled():
-        """ bool: enable/disable the comparator """
-        pass
-
-    @CU4ComponentContainer.value("CMPR", FloatValue, writable=True)
-    def level(self):
-        """ float: the value of the trigger level for comparator """
-        pass
-
+    enabled = CU4BoolValue("CLE")
+    level = CU4FloatValue("CMPR")

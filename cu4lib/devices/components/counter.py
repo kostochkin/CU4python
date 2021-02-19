@@ -1,4 +1,9 @@
-from cu4lib.devices.components.container import CU4ComponentContainer, FloatValue, BoolValue, IntValue
+from cu4lib.devices.components.descriptors import (
+        CU4ComponentContainer,
+        CU4FloatValue,
+        CU4BoolValue,
+        CU4ReadOnly,
+    )
 
 
 class CU4Counter(CU4ComponentContainer):
@@ -10,19 +15,6 @@ class CU4Counter(CU4ComponentContainer):
         :enabled bool: enable/disable the counter
         :time_constant float: counter time constant
     """
-
-    @CU4ComponentContainer.value("COUN", IntValue)
-    def counts():
-        """ int: receiving of the number of samples """
-        pass
-
-    @CU4ComponentContainer.value("COUE", BoolValue, writable=True)
-    def enabled():
-        """ bool: enable/disable the counter """
-        pass
-
-    @CU4ComponentContainer.value("TIMC", FloatValue, writable=True)
-    def time_constant():
-        """ float: counter time constant """
-        pass
-    
+    counts = CU4ReadOnly(CU4FloatValue("COUN"))
+    enabled = CU4BoolValue("COUE")
+    time_constant = CU4FloatValue("TIMC")

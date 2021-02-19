@@ -1,4 +1,9 @@
-from cu4lib.devices.components.container import CU4ComponentContainer, FloatValue
+from cu4lib.devices.components.descriptors import (
+        CU4ComponentContainer,
+        CU4FloatValue,
+        CU4ReadOnly
+    )
+
 
 class CU4CurrentBias(CU4ComponentContainer):
     """ CU4CurrentBias 
@@ -8,13 +13,5 @@ class CU4CurrentBias(CU4ComponentContainer):
         :current float: the bias current
         :voltage float: the bias voltage
     """
-    @CU4ComponentContainer.value("CURR", FloatValue, writable=True)
-    def current():
-        """ :current float: the bias current """
-        pass
-
-    @CU4ComponentContainer.value("VOLT", FloatValue)
-    def voltage():
-        """ :voltage float: the bias voltage """
-        pass
-
+    current = CU4FloatValue("CURR")
+    voltage = CU4ReadOnly(CU4FloatValue("VOLT"))

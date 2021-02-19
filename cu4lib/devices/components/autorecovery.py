@@ -1,8 +1,15 @@
-from cu4lib.devices.components.container import CU4ComponentContainer, FloatValue, BoolValue, IntValue
+from cu4lib.devices.components.descriptors import (
+        CU4ComponentContainer,
+        CU4BoolValue,
+        CU4FloatValue,
+        CU4IntValue,
+        CU4ReadOnly
+    )
 
 
 class CU4AutoRecovery(CU4ComponentContainer):
-    """ Bias automatic recovery component
+    """ CU4AutoRecovery
+        Bias automatic recovery component
         
         Properties
         ----------
@@ -15,28 +22,11 @@ class CU4AutoRecovery(CU4ComponentContainer):
         ---
         reset_counts() : reset the number of automatic recovery system triggers
     """
+    enabled = CU4BoolValue("ARE")
+    threshold = CU4FloatValue("ARTH")
+    timeout = CU4FloatValue("ARTO")
+    counts = CU4ReadOnly(CU4IntValue("ARCO"))
 
-    @CU4ComponentContainer.value("ARE", BoolValue, writable=True)
-    def enabled():
-        """ bool: enable/disable component """
-        pass
-    
-    @CU4ComponentContainer.value("ARTH", FloatValue, writable=True)
-    def threshold():
-        """ float: the activation voltage of the auto recovery system """
-        pass
-
-    @CU4ComponentContainer.value("ARTO", FloatValue, writable=True)
-    def timeout():
-        """ float: the time constant of the auto-recovery system """
-        pass
-
-    @CU4ComponentContainer.value("ARCO", IntValue)
-    def counts():
-        """ int: the number of automatic recovery system triggers """
-        pass
-
-    @CU4ComponentContainer.method("ARCO", ["0"])
-    def reset_counts():
+    def reset_counts(self):
         """ reset the number of automatic recovery system triggers """
-        pass
+        self._set_override_ro("counts", 0)
