@@ -27,11 +27,11 @@ This class encapsulates Ip address of any host. It also helps determines Ip addr
 
 #### Example:
 
-    	> import CU4lib as cu
-	> ip1 = HostIp()
+        > import CU4lib as cu
+	> ip1 = cu.HostIp()
 	> print(ip.value)
  	.....
-	> ip2 = HostIp("127.0.0.1")
+	> ip2 = cu.HostIp("127.0.0.1")
 	> print(ip.value)
 	.....
 
