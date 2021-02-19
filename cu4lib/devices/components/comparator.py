@@ -7,10 +7,13 @@ from cu4lib.devices.components.descriptors import (
 
 class CU4Comparator(CU4ComponentContainer):
     """ Representing Comparator
+
         Parameters
         ----------
-        :enabled bool: enable/disable the comparator
-        :level float: the value of the trigger level for comparator
+        enabled : bool
+            enable/disable the comparator
+        level : float
+            the value of the trigger level for comparator
     """
     enabled = CU4BoolValue("CLE")
     level = CU4FloatValue("CMPR")

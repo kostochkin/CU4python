@@ -11,9 +11,12 @@ class CU4Counter(CU4ComponentContainer):
 
         Properties
         ----------
-        :counts int: receiving of the number of samples
-        :enabled bool: enable/disable the counter
-        :time_constant float: counter time constant
+        counts : float
+            receiving of the number of samples
+        enabled : bool
+            enable/disable the counter
+        time_constant : float
+            counter time constant
     """
     counts = CU4ReadOnly(CU4FloatValue("COUN"))
     enabled = CU4BoolValue("COUE")

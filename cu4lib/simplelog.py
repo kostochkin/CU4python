@@ -1,6 +1,13 @@
 import sys
 
 class StdioLogger:
+    """ Simple logger
+
+        Constructor parameters
+            take : int
+                Truncate log record to corresponding size
+
+    """
     def __init__(self, take=None):
         self._strip = take
 

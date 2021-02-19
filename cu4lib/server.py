@@ -5,10 +5,22 @@ from cu4lib.devices.sd.m0 import CU4SDM0
 from cu4lib.servers.cu4module_server import SCPI, CU4ModuleServer
 
 class HostIp:
-    def __init__(self, addr=None, logger=StdioLogger()):
+    """ 
+        It encapsulates or autodetect ip address of the host.
+        
+        .. code-block:: python
+
+            # Autodetection
+            h = HostIp() 
+            print(h)
+            # Encapsualting
+            h = HostIp("123.456.789.101")
+            print(h)
+    """
+    def __init__(self, addr=None, logger=None):
         self._ip = addr
         self._auto = False
-        self._logger = logger
+        self._logger = logger or StdioLogger()
 
     @property
     def value(self):
@@ -42,12 +54,24 @@ class HostIp:
 
 
 class Cu4ServersList:
-    def __init__(self, host_ip=HostIp(), base_port=9876, timeout=3, logger=StdioLogger()):
+    """ 
+        This class searches servers over an Ethernet.
+        It implements iterator interface, so it can be used in the following way:
+        
+        .. code-block:: python
+
+            for server in Cu4ServersList(host_ip=HostIp()):
+                print(server)
+                # Each server represents an CU4 modular system:
+                for module in server:
+                    print(module)
+    """
+    def __init__(self, host_ip, base_port=9876, timeout=3, logger=None):
         self._ip = host_ip
         self._timeout = timeout
         self._base_port = base_port
         self._list = []
-        self._logger = logger
+        self._logger = logger or StdioLogger()
 
     def value(self):
         if not self._list:

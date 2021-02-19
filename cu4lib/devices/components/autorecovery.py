@@ -13,14 +13,19 @@ class CU4AutoRecovery(CU4ComponentContainer):
         
         Properties
         ----------
-        :enabled bool: enable/disable component
-        :threshold float: the activation voltage of the auto recovery system
-        :timeaot float: the time constant of the auto-recovery system
-        :counts int: the number of automatic recovery system triggers
+        enabled : bool
+            enable/disable component
+        threshold : float
+            the activation voltage of the auto recovery system
+        timeout : float
+            the time constant of the auto-recovery system
+        counts : int
+            the number of automatic recovery system triggers
 
         API
         ---
-        reset_counts() : reset the number of automatic recovery system triggers
+        reset_counts() : None
+            reset the number of automatic recovery system triggers
     """
     enabled = CU4BoolValue("ARE")
     threshold = CU4FloatValue("ARTH")

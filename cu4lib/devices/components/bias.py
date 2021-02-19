@@ -10,8 +10,10 @@ class CU4CurrentBias(CU4ComponentContainer):
         
         Properties
         ----------
-        :current float: the bias current
-        :voltage float: the bias voltage
+        current : float
+            the bias current
+        voltage : float
+            the bias voltage
     """
     current = CU4FloatValue("CURR")
     voltage = CU4ReadOnly(CU4FloatValue("VOLT"))

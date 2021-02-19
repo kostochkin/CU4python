@@ -11,8 +11,10 @@ class CU4TDM0(CU4Module):
         
         Properties
         ----------
-        :thermometer CU4Thermometer: The thermometer component of the module
-        :pressure_meter CU4PressureMeter: The pressure meter component of the module
+        thermometer : CU4Thermometer
+            The thermometer component of the module
+        pressure_meter : CU4PressureMeter
+            The pressure meter component of the module
     """
     thermometer = CU4Component(CU4Thermometer)
     pressure_meter = CU4Component(CU4PressureMeter)

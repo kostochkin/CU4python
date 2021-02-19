@@ -13,9 +13,12 @@ class CU4Thermometer(CU4ComponentContainer):
         
         Properties
         ----------
-        :enabled bool: enable/disable thermometer
-        :temperature float: current measured temperature
-        :bias CU4CurrentBias: Bias of the temperature sensor
+        enabled : bool
+            enable/disable thermometer
+        temperature : float
+            current measured temperature
+        bias : CU4CurrentBias
+            Bias of the temperature sensor
     """
     enabled = CU4BoolValue("THON")
     temperature = CU4ReadOnly(CU4FloatValue("TEMP"))
@@ -27,8 +30,12 @@ class CU4ThermometerM1(CU4ComponentContainer):
         
         Properties
         ----------
-        :temperature float: current measured temperature
-        :bias CU4CurrentBias: Bias of the temperature sensor
+        temperature : float
+            current measured temperature
+        current : float
+            bias current setter
+        voltage : float
+            bias voltage getter
     """
     temperature = CU4ReadOnly(CU4FloatValue("TEMP"))
     current = CU4WriteOnly(CU4FloatValue("CURR"))

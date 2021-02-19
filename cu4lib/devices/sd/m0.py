@@ -16,17 +16,31 @@ class CU4SDM0(CU4Module):
 
         Properties
         ----------
-        :counts int: get current counts
-        :bias CU4CurrentBias:
-        :comparator CU4Comparator:
-        :counter CU4Counter:
-        :amplifier CU4Amplifier:
-        :shorted bool:
-        :is_cmp bool:
+        bias : CU4CurrentBias
+            a CU4CurrentBias instance
+
+        comparator : CU4Comparator
+            a CU4Comparator instance
+
+        counter : CU4Counter
+            a CU4Counter instance
+
+        amplifier : CU4Amplifier
+            a CU4Amplifier instance
+
+        shorted : bool
+            short bias circuit
+
+        is_cmp : bool
+            indicates current output
+            
 
         API
         ---
-        switch_to_amp_out, switch_to_cmp_out: switching between "AMP" and "CMP" outputs
+        switch_to_amp_out : None
+            switches to "AMP" output
+        switch_to_cmp_out : None
+            switches to "CMP" output
     """
     bias = CU4Component(CU4CurrentBias)
     comparator = CU4Component(CU4Comparator)

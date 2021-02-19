@@ -13,12 +13,16 @@ class CU4TDM1(CU4Module):
         
         Properties
         ----------
-        :thermometer0 CU4Thermometer: 1st thermometer component of the module
-        :thermometer1 CU4Thermometer: 2nd thermometer component of the module
-        :thermometer2 CU4Thermometer: 3th thermometer component of the module
-        :thermometer3 CU4Thermometer: 4th thermometer component of the module
+        thermometer1 : CU4ThermometerM1
+            1st thermometer component of the module
+        thermometer2 : CU4ThermometerM1
+            2nd thermometer component of the module
+        thermometer3 : CU4ThermometerM1
+            3th thermometer component of the module
+        thermometer4 : CU4ThermometerM1
+            4th thermometer component of the module
     """
-    thermometer0 = CU4Component(CU4ThermometerM1, 0)
-    thermometer1 = CU4Component(CU4ThermometerM1, 1)
-    thermometer2 = CU4Component(CU4ThermometerM1, 2)
-    thermometer3 = CU4Component(CU4ThermometerM1, 3)
+    thermometer1 = CU4Component(CU4ThermometerM1, 0)
+    thermometer2 = CU4Component(CU4ThermometerM1, 1)
+    thermometer3 = CU4Component(CU4ThermometerM1, 2)
+    thermometer4 = CU4Component(CU4ThermometerM1, 3)
