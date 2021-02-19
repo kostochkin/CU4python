@@ -1,34 +1,54 @@
 # cu4python
 
-An example of communication with CU4 using Python.
+A Python 3 library for modular electronic system Control Unit 4 by Scontel.
 
-There are two files: example.py and examplelib.py
+## Module classes
 
-# examplelib.py
+These classes representing available modules are:
 
-This file contains several classes showing main use cases:
+- class CU4TDM0
+- class CU4TDM1
+- class CU4SDM0
 
-* HostIP encapsulates IP address and helps determine IP address of the client
-* Cu4ServersList shows an example how to find server containing devices
-* CU4Server shows an example how to enumerate devices on server
-* CU4Device shows an example how to send general SCPI commands
-* CU4DeviceSDM and CU4DeviceTDM show an example how to send devices commands
+Each class has own docstrings. Use help() function to get description of these classes.
 
-Note that this is not a complete library.
+### Example
 
-# example.py
+    $ python
+    > from cu4lib.devices.td.m0 import CU4TDM0
+    > help(CU4TDM0)
 
-This script shows an example how classes work together.
-It creates Cu4ServersList instance. Then it run simple script for each device on each server:
-- It initializes the device
-- It gets data from the device
-- If device is thermometer it does useless example work.
+## Auxiliary Classes
 
-# See also
+This library contains several auxiliary classes:
 
-* Manuals: see https://www.scontel.ru/index/manuals/
+### class HostIp
+
+This class encapsulates Ip address of any host. It also helps determines Ip address of client.
+
+#### Example:
+
+	ip1 = HostIp()
+	print(ip.value)
+	ip2 = HostIp("127.0.0.1")
+	print(ip.value)
+
+### class Cu4ServersList
+
+This class inteded to find the Control Unit on local network.
+
+#### Example
+
+    for server in Cu4ServersList(host_ip=HostIp()):
+        print(server)
+        for module in server:
+            print(module)
+
+
+# References
+
+* cu4lib/test/example.py
+* Manuals: https://www.scontel.ru/index/manuals/
 * SCPI interface: https://www.scontel.ru/wp-content/uploads/2020/08/Commands-CU.pdf
-* Scontel site: see https://www.scontel.ru
-
-
+* Scontel site: https://www.scontel.ru
 
