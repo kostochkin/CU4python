@@ -40,6 +40,7 @@ class SCPI:
 class CU4ModuleServer:
     def __init__(self, scpi_serv, address, dev_type=None):
         self._serv = scpi_serv
+        self.bus_address = address
         self._dev = f"DEV{address}"
         self._type = CU4ModuleTypePrefix(self, dev_type)
         

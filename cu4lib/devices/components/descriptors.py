@@ -10,6 +10,7 @@ class CU4ValueError(Exception):
 
 
 class CU4Component:
+    """"""
     def __init__(self, c_class, channel=None):
         self._c_class = c_class
         self._name = None
@@ -29,10 +30,13 @@ class CU4Component:
 
 
 class CU4Value:
+    _cu4_type = "raw value"
+
     def __init__(self, cmd):
         self._cmd = cmd
         self._name = None
         self._gen = False
+        self.__doc__ = self._cu4_type
 
     def __set_name__(self, o, n):
         self._name = n
@@ -51,10 +55,10 @@ class CU4Value:
 
 
 class CU4Gen:
-    """"""
     def __init__(self, val):
         self._v = val
         self._v._gen = True
+        self._cu4_type = val._cu4_type
 
     def __set_name__(self, o, n):
         self._v.__set_name__(o, n)
@@ -67,7 +71,7 @@ class CU4Gen:
 
 
 class CU4DictValue(CU4Value):
-    """ dict (with JSON repr) """
+    _cu4_type = " dict (with JSON repr) "
 
     def __get__(self, o, n=None):
         return json.loads(super().__get__(o, n))
@@ -77,7 +81,7 @@ class CU4DictValue(CU4Value):
 
 
 class CU4BoolValue(CU4Value):
-    """ bool """
+    _cu4_type = " bool "
 
     def __get__(self, o, n=None):
         return bool(int(super().__get__(o, n)))
@@ -87,7 +91,7 @@ class CU4BoolValue(CU4Value):
 
 
 class CU4IntValue(CU4Value):
-    """ int """
+    _cu4_type = " int "
 
     def __get__(self, o, n=None):
         return round(float(super().__get__(o, n)))
@@ -97,7 +101,7 @@ class CU4IntValue(CU4Value):
 
 
 class CU4BitValue(CU4IntValue):
-    """ bit (False/True) """
+    _cu4_type = " bit (False | True) "
 
     def __init__(self, cmd, b):
         super().__init__(cmd)
@@ -117,7 +121,7 @@ class CU4BitValue(CU4IntValue):
 
 
 class CU4FloatValue(CU4Value):
-    """ float """
+    _cu4_type = " float "
 
     def __get__(self, o, n=None):
         return float(super().__get__(o, n))
@@ -129,7 +133,7 @@ class CU4FloatValue(CU4Value):
 class CU4ReadOnly:
     def __init__(self, value):
         self._v = value
-        self.__doc__ = self._v.__doc__ + " (read-only)"
+        self.__doc__ = self._v._cu4_type + " (read-only)"
 
     def __set_name__(self, o, n):
         self._v.__set_name__(o, n)
@@ -146,7 +150,7 @@ class CU4ReadOnly:
 class CU4WriteOnly:
     def __init__(self, value):
         self._v = value
-        self.__doc__ = self._v.__doc__ + " (write-only)"
+        self.__doc__ = self._v._cu4_type + " (write-only)"
 
     def __set_name__(self, o, n):
         self._v.__set_name__(o, n)
@@ -199,3 +203,6 @@ class CU4Module(CU4ComponentContainer):
     def reboot(self):
         """ Reboot module  """
         self._serv.set(["BOOT"], [], gen=True)
+    
+    def __str__(self):
+        return f"<{self.__class__.__name__} address={self._serv.bus_address}>"

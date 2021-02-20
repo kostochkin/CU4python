@@ -1,5 +1,20 @@
 import sys
 
+
+class EmptyLogger:
+    def debug(self, *args):
+        pass
+    
+    def warn(self, *args):
+        pass
+    
+    def info(self, *args):
+        pass
+
+    def error(self, *args):
+        pass
+
+
 class StdioLogger:
     """ Simple logger
 
@@ -38,5 +53,19 @@ class StdioLogger:
         elif type(arg) == str and len(arg) > self._strip:
             return arg[:self._strip] + ' <<<stripped'
         return arg
+
+
+class StdioErrorLogger(StdioLogger):
+    def debug(self, *args):
+        pass
+    
+    def warn(self, *args):
+        pass
+    
+    def error(self, *args):
+        self._print(sys.stderr, "ERROR", *args)
+
+    def info(self, *args):
+        pass
 
 

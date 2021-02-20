@@ -9,7 +9,7 @@ from cu4lib.devices.components.descriptors import (
 class CU4TDM1(CU4Module):
     """ Temperature driver M1
         
-        Warn: Not tested
+        Warn: tested only with mock
         
         Properties
         ----------
