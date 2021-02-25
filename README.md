@@ -1,6 +1,10 @@
 # cu4python
 
-A Python 3 library for modular electronic system Control Unit 4 by Scontel.
+A Python library for modular electronic system Control Unit 4 by Scontel.
+
+## Requirements
+
+Python 2.7 and higher
 
 ## Module classes
 
