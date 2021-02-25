@@ -12,7 +12,8 @@ from cu4lib.devices.components.amplifier import CU4Amplifier
 
 
 class CU4SDM0(CU4Module):
-    """ SSPD driver M0
+    """ SSPD module M0.
+        Base class: CU4Module
 
         Properties
         ----------

@@ -7,7 +7,8 @@ from cu4lib.devices.components.descriptors import (
 
 
 class CU4TDM1(CU4Module):
-    """ Temperature driver M1
+    """ Temperature module M1.
+        Base class: CU4Module
         
         Warn: tested only with mock
         

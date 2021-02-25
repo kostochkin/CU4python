@@ -7,7 +7,8 @@ from cu4lib.devices.components.descriptors import (
 
 
 class CU4TDM0(CU4Module):
-    """ Temperature driver M0
+    """ Temperature module M0.
+        Base class: CU4Module
         
         Properties
         ----------

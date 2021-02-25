@@ -7,7 +7,7 @@ from cu4lib.devices.components.descriptors import (
 
 
 class CU4Counter(CU4ComponentContainer):
-    """ Representing counter
+    """ CU4Counter
 
         Properties
         ----------

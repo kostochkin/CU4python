@@ -6,7 +6,7 @@ from cu4lib.devices.components.descriptors import (
 
 
 class CU4Comparator(CU4ComponentContainer):
-    """ Representing Comparator
+    """ CU4Comparator
 
         Parameters
         ----------

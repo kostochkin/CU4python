@@ -194,13 +194,24 @@ class CU4ComponentContainer(object):
 
 
 class CU4Module(CU4ComponentContainer):
-    """ General properties
+    """ Base class for all modules.
+        It has some general properties and functions specific to modules.
         
         Properties
         ----------
-        :data dict:
-        :id str:
-        :err str"
+        data : dict
+            Receiving all data
+        id : str
+            Device unique id
+        last_error : str
+            Receiving the last error
+
+        Api
+        ---
+        init() : None
+            Module hardware initialization
+        reboot() : None
+            Reboot the module
     """
     data = CU4ReadOnly(CU4DictValue("DATA"))
     id = CU4ReadOnly(CU4Gen(CU4Value("DID")))
