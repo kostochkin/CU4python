@@ -1,4 +1,4 @@
-from cu4lib.server import CU4Server
+from CU4lib.server import CU4Server
 
 class CU4TM1ServerMock(CU4Server):
     def __init__(self, *args, **kwargs):

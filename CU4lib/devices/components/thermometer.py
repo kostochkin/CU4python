@@ -1,4 +1,4 @@
-from cu4lib.devices.components.descriptors import (
+from CU4lib.devices.components.descriptors import (
         CU4ComponentContainer,
         CU4BoolValue,
         CU4FloatValue,
@@ -6,7 +6,7 @@ from cu4lib.devices.components.descriptors import (
         CU4WriteOnly,
         CU4Component
     )
-from cu4lib.devices.components.bias import CU4CurrentBias
+from CU4lib.devices.components.bias import CU4CurrentBias
 
 class CU4Thermometer(CU4ComponentContainer):
     """ CU4Thermometer 

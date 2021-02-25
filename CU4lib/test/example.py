@@ -1,14 +1,14 @@
-from cu4lib.server import *
-from cu4lib.simplelog import StdioLogger
-from cu4lib.devices.components.descriptors import CU4ValueError
+from CU4lib.server import *
+from CU4lib.simplelog import StdioLogger
+from CU4lib.devices.components.descriptors import CU4ValueError
 
-import cu4lib.devices.td.m0 as m
-import cu4lib.devices.sd.m0 as sspd
+import CU4lib.devices.td.m0 as m
+import CU4lib.devices.sd.m0 as sspd
 
 # Mock tests
-from cu4lib.test.mockm1server import CU4TM1ServerMock
-from cu4lib.devices.td.m1 import CU4TDM1
-from cu4lib.servers.cu4module_server import CU4ModuleServer, SCPI
+from CU4lib.test.mockm1server import CU4TM1ServerMock
+from CU4lib.devices.td.m1 import CU4TDM1
+from CU4lib.servers.cu4module_server import CU4ModuleServer, SCPI
 
 tdm1 = CU4TDM1(CU4ModuleServer(SCPI(CU4TM1ServerMock()), 0, "CU4TDM1"))
 print(tdm1.thermometer1.temperature)

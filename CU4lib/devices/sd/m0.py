@@ -1,14 +1,14 @@
-from cu4lib.devices.components.descriptors import (
+from CU4lib.devices.components.descriptors import (
         CU4Module,
         CU4Component,
         CU4BoolValue,
         CU4ReadOnly
     )
-from cu4lib.devices.components.bias import CU4CurrentBias
-from cu4lib.devices.components.comparator import CU4Comparator
-from cu4lib.devices.components.counter import CU4Counter
-from cu4lib.devices.components.autorecovery import CU4AutoRecovery
-from cu4lib.devices.components.amplifier import CU4Amplifier
+from CU4lib.devices.components.bias import CU4CurrentBias
+from CU4lib.devices.components.comparator import CU4Comparator
+from CU4lib.devices.components.counter import CU4Counter
+from CU4lib.devices.components.autorecovery import CU4AutoRecovery
+from CU4lib.devices.components.amplifier import CU4Amplifier
 
 
 class CU4SDM0(CU4Module):

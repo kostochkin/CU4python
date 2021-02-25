@@ -1,4 +1,4 @@
-from cu4lib.devices.components.descriptors import (
+from CU4lib.devices.components.descriptors import (
         CU4ComponentContainer,
         CU4BoolValue,
         CU4FloatValue,

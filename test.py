@@ -1,1 +1,1 @@
-import cu4lib.test.example
+import CU4lib.test.example

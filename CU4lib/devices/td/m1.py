@@ -1,6 +1,6 @@
-from cu4lib.devices.components.thermometer import CU4ThermometerM1
-from cu4lib.devices.components.pressure import CU4PressureMeter
-from cu4lib.devices.components.descriptors import (
+from CU4lib.devices.components.thermometer import CU4ThermometerM1
+from CU4lib.devices.components.pressure import CU4PressureMeter
+from CU4lib.devices.components.descriptors import (
         CU4Module,
         CU4Component
     )
