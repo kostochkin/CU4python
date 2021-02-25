@@ -2,6 +2,7 @@ import socket
 from cu4lib.simplelog import EmptyLogger
 from cu4lib.devices.td.m0 import CU4TDM0
 from cu4lib.devices.sd.m0 import CU4SDM0
+from cu4lib.devices.components.descriptors import CU4Module
 from cu4lib.servers.cu4module_server import SCPI, CU4ModuleServer
 
 class HostIp:
@@ -108,6 +109,8 @@ class Cu4ServersList:
                     new_dict.update(self._incoming_to_servers_dict(tcpsocket))
                 except socket.timeout:
                     if not new_dict:
+                        addr = "127.0.0.1"
+                        new_dict[addr] = CU4Server(ip=HostIp(addr), port=self._base_port, logger=self._logger)
                         self._logger.warn("Servers not found")
                     break
         finally:
@@ -147,7 +150,7 @@ class Cu4ServersList:
 
     def __repr__(self):
         a = ", ".join(map(repr, self))
-        return f"[{a}]"
+        return "[{}]".format(a)
 
 
 class CU4Server:
@@ -193,7 +196,7 @@ class CU4Server:
         return "<CU4Server ip={}>".format(self._ip)
 
 
-class CU4ModulesList:
+class CU4ModulesList(object):
     def __init__(self, cu4server):
         self._cu4server = cu4server
         self._modules = {}
@@ -215,23 +218,22 @@ class CU4ModulesList:
         params = s.split(": ")
         address = int(params[1][8:])
         dev_type = params[2][5:]
-        return address, CU4Module(dev_type, self._cu4server, address)
+        return address, cu4Module(dev_type, self._cu4server, address)
 
     def __str__(self):
-        return "[{}]".format(", ".join(map(str, self)))
+        return "[{}]".format(", ".join(map(str, self._enumerate_modules().values())))
 
 
-class CU4Module:
-    def __new__(self, dev_type, cu4server, address):
-        scpi = SCPI(cu4server)
-        part = dev_type[:7]
-        if part == "CU4SDM0":
-            dev = CU4SDM0
-        elif part == "CU4TDM0":
-            dev = CU4TDM0
-        elif part == "CU4TDM1":
-            dev = CU4TDM1
-        else:
-            raise Exception(f"Not implemented: {dev_type}")
-        return dev(CU4ModuleServer(scpi, address, dev_type))
+def cu4Module(dev_type, cu4server, address):
+    scpi = SCPI(cu4server)
+    part = dev_type[:7]
+    if part == "CU4SDM0":
+        dev = CU4SDM0
+#    elif part == "CU4TDM0":
+#        dev = CU4TDM0
+    elif part == "CU4TDM1":
+        dev = CU4TDM1
+    else:
+        dev = CU4Module
+    return dev(CU4ModuleServer(scpi, address, dev_type))
 

@@ -42,12 +42,13 @@ except CU4ValueError:
 
 servers = Cu4ServersList(logger=StdioLogger(take=32))
 
+print(servers)
+
 for s in servers:
     if s.ip().value != "127.0.0.1":
         continue
     
     print(s.modules)
-
     for d in s.modules:
         d.init()
         print(d.id)

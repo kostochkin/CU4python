@@ -38,8 +38,11 @@ class StdioLogger:
     def info(self, *args):
         self._print(sys.stdout, "INFO", *args)
 
-    def _print(self, file, type, *args):
-        print("[{}]".format(type), *self._strip_all(args), sep=" ", file=file)
+    def _print(self, file, typ, *args):
+        sargs = "[{}] ".format(typ)
+        sargs += " ".join(self._strip_all(args))
+        file.write(sargs + "\n")
+        file.flush()
 
     def _strip_all(self, args):
         if self._strip is None:
@@ -49,10 +52,10 @@ class StdioLogger:
     
     def _strip_one(self, arg):
         if type(arg) == bytes and len(arg) > self._strip:
-            return arg[:self._strip] + b' <<<stripped'
+            return str(arg[:self._strip] + b' <<<stripped')
         elif type(arg) == str and len(arg) > self._strip:
             return arg[:self._strip] + ' <<<stripped'
-        return arg
+        return str(arg)
 
 
 class StdioErrorLogger(StdioLogger):

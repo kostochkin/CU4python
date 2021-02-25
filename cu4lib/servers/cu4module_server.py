@@ -1,4 +1,4 @@
-class UnknownModuleType(Exception):
+class UnsupportedModuleType(Exception):
     pass
 
 
@@ -15,20 +15,20 @@ class SCPI:
 
     def get(self, command_list):
         cmd = self._cmd(command_list)
-        pl = f"{cmd}?\r\n"
+        pl = "{}?\r\n".format(cmd)
         resp = self._t.send_scpi(pl).strip()
         if resp in self._errors:
-            raise SCPIError(f"{resp} <{pl}>")
+            raise SCPIError("{} <{}>".format(resp, pl))
         else:
             return resp
 
     def set(self, command_list, param_list):
         cmd = self._cmd(command_list)
         prm = self._prm(param_list)
-        pl = f"{cmd} {prm}\r\n"
+        pl = "{} {}\r\n".format(cmd, prm)
         resp = self._t.send_scpi(pl).strip()
         if resp in self._errors:
-            raise SCPIError(f"{resp} <{pl}>")
+            raise SCPIError("{} <{}>".format(resp, pl))
 
     def _cmd(self, command_list):
         return ":".join(command_list)
@@ -41,7 +41,7 @@ class CU4ModuleServer:
     def __init__(self, scpi_serv, address, dev_type=None):
         self._serv = scpi_serv
         self.bus_address = address
-        self._dev = f"DEV{address}"
+        self._dev = "DEV{}".format(address)
         self._type = CU4ModuleTypePrefix(self, dev_type)
         
     def get(self, cmd_l, gen=False):
@@ -75,5 +75,5 @@ class CU4ModuleTypePrefix:
         elif dt == "CU4SD":
             return "SSPD"
         else:
-            raise UnknownModuleType(self._type)
+            raise UnsupportedModuleType(self._type)
 
