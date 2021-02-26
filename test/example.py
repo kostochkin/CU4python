@@ -3,7 +3,7 @@ from CU4lib.simplelog import StdioLogger
 from CU4lib.devices.components.descriptors import CU4ValueError
 
 import CU4lib.devices.td.m0 as m
-import CU4lib.devices.sd.m0 as sspd
+import CU4lib.devices.sd as sspd
 
 # Mock tests
 from test.mockm1server import CU4TM1ServerMock
@@ -44,6 +44,8 @@ servers = CU4ServersList(logger=StdioLogger(take=32))
 
 print(servers)
 
+
+
 for s in servers:
     if s.ip().value != "127.0.0.1":
         continue
@@ -54,7 +56,7 @@ for s in servers:
         print(d.id)
         print(d.data)
         print(d.last_error)
-        if (d.__class__ == sspd.CU4SDM0):
+        if (d.__class__ == sspd.CU4SDM1 or d.__class__ == sspd.CU4SDM0):
             # Autorecovery test
             print(d.auto_recovery.counts)
             d.auto_recovery.reset_counts()

@@ -31,6 +31,7 @@ These classes representing available modules are:
 - class CU4TDM0
 - class CU4TDM1
 - class CU4SDM0
+- class CU4SDM1
 
 Each class has own docstrings. Use help() function to get description of these classes.
 
@@ -73,6 +74,7 @@ This class inteded to find the Control Unit on local network.
 
 # References
 
+* CU4lib doc: http://rplab.ru/~kostochkin/scontel/cu4lib.pdf
 * test/example.py
 * Manuals: https://www.scontel.ru/index/manuals/
 * SCPI interface: https://www.scontel.ru/wp-content/uploads/2020/08/Commands-CU.pdf

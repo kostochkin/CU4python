@@ -1,7 +1,7 @@
 import socket
 from CU4lib.simplelog import EmptyLogger
-from CU4lib.devices.td.m0 import CU4TDM0
-from CU4lib.devices.sd.m0 import CU4SDM0
+from CU4lib.devices.td import CU4TDM0, CU4TDM1
+from CU4lib.devices.sd import CU4SDM0, CU4SDM1
 from CU4lib.devices.components.descriptors import CU4Module
 from CU4lib.servers.cu4module_server import SCPI, CU4ModuleServer
 
@@ -230,6 +230,8 @@ def cu4Module(dev_type, cu4server, address):
     part = dev_type[:7]
     if part == "CU4SDM0":
         dev = CU4SDM0
+    elif part == "CU4SDM1":
+        dev = CU4SDM1
     elif part == "CU4TDM0":
         dev = CU4TDM0
     elif part == "CU4TDM1":

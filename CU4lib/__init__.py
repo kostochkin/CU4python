@@ -1,13 +1,16 @@
 from CU4lib.server import HostIp, CU4ServersList
-from CU4lib.devices.td.m0 import CU4TDM0
-from CU4lib.devices.td.m1 import CU4TDM1
-from CU4lib.devices.sd.m0 import CU4SDM0
-from CU4lib.devices.components.amplifier import CU4Amplifier
-from CU4lib.devices.components.autorecovery import CU4AutoRecovery
-from CU4lib.devices.components.bias import CU4CurrentBias
-from CU4lib.devices.components.comparator import CU4Comparator
-from CU4lib.devices.components.counter import CU4Counter
-from CU4lib.devices.components.pressure import CU4PressureMeterVoltage, CU4PressureMeter
-from CU4lib.devices.components.thermometer import CU4Thermometer, CU4ThermometerM1
+from CU4lib.devices.td import CU4TDM0, CU4TDM1
+from CU4lib.devices.sd import CU4SDM0, CU4SDM1
+from CU4lib.devices.components import (
+        CU4Amplifier,
+        CU4AutoRecovery,
+        CU4CurrentBias,
+        CU4Comparator,
+        CU4Counter,
+        CU4PressureMeterVoltage,
+        CU4PressureMeter,
+        CU4Thermometer,
+        CU4ThermometerM1
+    )
 
 __version__ = '0.1'

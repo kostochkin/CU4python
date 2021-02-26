@@ -137,6 +137,9 @@ class CU4ReadOnly(object):
         self.__doc__ = self._v._cu4_type + " (read-only)"
 
     def __set_name__(self, o, n):
+        print("-----------")
+        print(o, n)
+        print("-----------")
         self._v.__set_name__(o, n)
 
     def __get__(self, o, n=None):
@@ -169,14 +172,6 @@ class Components(object):
     pass
 
 
-def _set_names_python2(self):
-    if sys.version_info[0] < 3:
-        for v in vars(self.__class__):
-            d = self.__class__.__dict__[v]
-            if hasattr(d, '__set_name__'):
-                d.__set_name__(self, v)
-
-
 class CU4ComponentContainer(object):
     def __init__(self, scpi_serv, channel=None):
         """ Parameters
@@ -186,11 +181,23 @@ class CU4ComponentContainer(object):
         self._serv = scpi_serv
         self._components = Components()
         self._channel = channel
-        _set_names_python2(self)
+        if sys.version_info[0] < 3:
+            self._set_names_python2()
 
 
     def _set_override_ro(self, name, v):
-        vars(self.__class__)[name]._v.__set__(self, v)
+        for cls in self.__class__.mro():
+            vrs = vars(cls)
+            if name in vrs:
+                vrs[name]._v.__set__(self, v)
+                break
+
+    def _set_names_python2(self):
+        for cls in self.__class__.mro():
+            for v in vars(cls):
+                d = cls.__dict__[v]
+                if hasattr(d, '__set_name__'):
+                    d.__set_name__(self, v)
 
 
 class CU4Module(CU4ComponentContainer):
