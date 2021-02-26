@@ -6,6 +6,18 @@ A Python library for modular electronic system Control Unit 4 by Scontel.
 
 Python 2.7 and higher
 
+## Installation
+
+    $ git clone https://github.com/kostochkin/cu4python
+    $ cd cu4python
+
+With pip:
+    $ pip install .
+
+Without pip:
+    $ python setup.py build
+    $ sudo python setup.py install
+
 ## Module classes
 
 These classes representing available modules are:

@@ -10,7 +10,7 @@ setup(
         "Bug Tracker": "https://github.com/kostochkin/cu4python/issues",
         "Source Code": "https://github.com/kostochkin/cu4python",
     },
-    packages=find_packages(),
+    packages=find_packages(include=["CU4lib", "CU4lib.*"]),
     platforms='All',
     python_requires='>=2.7',
     license='MIT',
