@@ -57,13 +57,15 @@ This class encapsulates IP address of any host. It also helps to determine IP ad
 	> print(ip.value)
 	.....
 
-### class Cu4ServersList
+### class CU4ServersList
 
 This class inteded to find the Control Unit on local network.
 
 #### Example
 
-    for server in Cu4ServersList(host_ip=HostIp()):
+    import CU4lib as cu
+
+    for server in cu.CU4ServersList(host_ip=cu.HostIp()):
         print(server)
         for module in server:
             print(module)

@@ -56,7 +56,7 @@ class HostIp:
         return "<{}IP={}>".format(a, v)
 
 
-class Cu4ServersList:
+class CU4ServersList:
     """ 
         This class searches servers over an Ethernet.
         It implements the iterator interface, so it can be used in the following way:

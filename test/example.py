@@ -40,7 +40,7 @@ except CU4ValueError:
     
 # End mock
 
-servers = Cu4ServersList(logger=StdioLogger(take=32))
+servers = CU4ServersList(logger=StdioLogger(take=32))
 
 print(servers)
 
