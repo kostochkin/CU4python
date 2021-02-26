@@ -41,16 +41,13 @@ except CU4ValueError:
     
 # End mock
 
-servers = CU4ServersList(logger=StdioLogger(take=32))
 
-print(servers)
+for x in range(0, 1):
+    servers = CU4ServersList(logger=StdioLogger())
 
-
-
-for s in servers:
-    if s.ip().value != "127.0.0.1":
-        continue
-    
+    #print(servers)
+    s = servers["127.0.0.1"]
+    s.modules.add_addresses([0, 1, 2])
     print(s.modules)
     for d in s.modules:
         d.init()

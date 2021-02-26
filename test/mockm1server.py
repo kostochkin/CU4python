@@ -3,10 +3,20 @@ from CU4lib.servers import CU4Server
 class CU4TM1ServerMock(CU4Server):
     def __init__(self, *args, **kwargs):
         self._vals = {}
+        self._recv = None
 
-    def send_scpi(self, command):
+    def send_r(self, command):
+        self.send(command)
+        return self.receive()
+
+    def send(self, command):
         print("[MOCK] U4TM1ServerMock sending", command.strip())
-        return str(self._reply_command(command.strip())) + "\r\n"
+        self._recv = str(self._reply_command(command.strip())) + "\r\n"
+
+    def receive(self, n=4196):
+        a = self._recv
+        self._recv = a[n:]
+        return a[:n]
 
     def _reply_command(self, command):
         pcmd = self._parse_command(command)

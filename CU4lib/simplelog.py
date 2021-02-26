@@ -46,7 +46,7 @@ class StdioLogger:
 
     def _strip_all(self, args):
         if self._strip is None:
-            return args
+            return list(map(str,args))
         else:
             return list(map(self._strip_one, args))
     

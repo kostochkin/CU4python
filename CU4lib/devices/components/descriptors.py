@@ -30,8 +30,8 @@ class CU4Component(object):
         raise CU4ComponentError("Can't assign any value to {} {}".format(self.__class__.__name__, self._name))
 
 
-class CU4Value(object):
-    _cu4_type = "raw value"
+class CU4String(object):
+    _cu4_type = "string"
 
     def __init__(self, cmd):
         self._cmd = cmd
@@ -43,7 +43,7 @@ class CU4Value(object):
         self._name = n
 
     def __get__(self, o, n=None):
-        return o._serv.get([self._channelize(o)], gen=self._gen)
+        return o._serv.get([self._channelize(o)], gen=self._gen)[0]
 
     def __set__(self, o, v):
         o._serv.set([self._channelize(o)], [v], gen=self._gen)
@@ -71,7 +71,7 @@ class CU4Gen(object):
         self._v.__set__(o, v)
 
 
-class CU4DictValue(CU4Value):
+class CU4DictValue(CU4String):
     _cu4_type = " dict (with JSON repr) "
 
     def __get__(self, o, n=None):
@@ -81,7 +81,7 @@ class CU4DictValue(CU4Value):
         return super(self.__class__, self).__set__(o, json.dumps(v))
 
 
-class CU4BoolValue(CU4Value):
+class CU4BoolValue(CU4String):
     _cu4_type = " bool "
 
     def __get__(self, o, n=None):
@@ -91,7 +91,7 @@ class CU4BoolValue(CU4Value):
         return super(self.__class__, self).__set__(o, str(int(v)))
 
 
-class CU4IntValue(CU4Value):
+class CU4IntValue(CU4String):
     _cu4_type = " int "
 
     def __get__(self, o, n=None):
@@ -121,7 +121,7 @@ class CU4BitValue(CU4IntValue):
         super(self.__class__, self).__set__(o, i)
 
 
-class CU4FloatValue(CU4Value):
+class CU4FloatValue(CU4String):
     _cu4_type = " float "
 
     def __get__(self, o, n=None):
@@ -218,8 +218,8 @@ class CU4Module(CU4ComponentContainer):
             Reboot the module
     """
     data = CU4ReadOnly(CU4DictValue("DATA"))
-    id = CU4ReadOnly(CU4Gen(CU4Value("DID")))
-    last_error = CU4ReadOnly(CU4Gen(CU4Value("ERR")))
+    id = CU4ReadOnly(CU4Gen(CU4String("DID")))
+    last_error = CU4ReadOnly(CU4Gen(CU4String("ERR")))
 
     def init(self):
         """ Module hardware initialization """

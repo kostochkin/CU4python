@@ -16,26 +16,33 @@ class SCPI:
     def get(self, command_list):
         cmd = self._cmd(command_list)
         pl = "{}?\r\n".format(cmd)
-        resp = self._t.send_scpi(pl).strip()
-        if resp in self._errors:
-            raise SCPIError("{} <{}>".format(resp, pl))
-        else:
-            return resp
+        self._t.send(pl)
+        return self._process_response()
 
     def set(self, command_list, param_list):
         cmd = self._cmd(command_list)
-        prm = self._prm(param_list)
-        pl = "{} {}\r\n".format(cmd, prm)
-        resp = self._t.send_scpi(pl).strip()
-        if resp in self._errors:
-            raise SCPIError("{} <{}>".format(resp, pl))
+        self._t.send(" ".join([cmd] + param_list) + "\r\n")
+        return self._process_response()
+
+    def _process_response(self):
+        resps = []
+        rcvd = ""
+        while True:
+            rcvd += self._t.receive()
+            splt = rcvd.split("\r\n")
+            if len(splt) > 1:
+                resps += splt[:-1]
+                rcvd = splt[-1]
+                if rcvd == "":
+                    break
+        for x in resps:
+            if x in self._errors:
+                raise SCPIError("{} <{}>".format(resp, pl))
+        return resps
 
     def _cmd(self, command_list):
         return ":".join(command_list)
     
-    def _prm(self, param_list):
-        return " ".join(param_list)
-
 
 class CU4ModuleServer:
     def __init__(self, scpi_serv, address, dev_type=None):

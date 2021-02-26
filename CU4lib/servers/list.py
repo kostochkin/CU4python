@@ -41,7 +41,10 @@ class CU4ServersList:
         return self._dict
 
     def __getitem__(self, ip_addr):
-        return self.value()[ip_addr]
+        if ip_addr in self._dict:
+            return self._dict[ip_addr]
+        else:
+            return CU4Server(ip=HostIp(ip_addr), port=self._base_port, logger=self._logger)
 
     def _enumerate_servers(self):
         new_dict = {}
@@ -58,8 +61,8 @@ class CU4ServersList:
                 except socket.timeout:
                     if not new_dict:
                         # For testing
-                        addr = "127.0.0.1"
-                        new_dict[addr] = CU4Server(ip=HostIp(addr), port=self._base_port, logger=self._logger)
+                        # addr = "127.0.0.1"
+                        # new_dict[addr] = CU4Server(ip=HostIp(addr), port=self._base_port, logger=self._logger)
                         self._logger.warn("Servers not found")
                     break
         finally:

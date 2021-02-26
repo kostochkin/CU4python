@@ -12,29 +12,50 @@ class CU4Server:
         self._logger = logger or EmptyLogger()
         self._timeout = timeout
         self._modules = None
+        self._addr_sock = None
 
-    def send_scpi(self, command):
+    def _init_socket(self):
+        if self._addr_sock is None:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(self._timeout)
+            addr = (self._ip.value, self._port)
+            sock.connect(addr)
+            self._addr_sock = addr, sock
+        return self._addr_sock
+
+    def _close_socket(self):
+        _, sock = self._addr_sock
+        sock.close()
+        self._addr_sock = None
+
+    def send_r(self, command):
+        self.send(command)
+        return self.receive()
+
+    def send(self, command):
         encoded = command.encode()
         self._logger.debug("Sending", encoded)
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        sock.settimeout(self._timeout)
-        addr = (self._ip.value, self._port)
         s = b''
+        addr, sock = self._init_socket()
         try:
-            sock.connect(addr)
-            sock.sendto(encoded, addr)
-            while (s[-2:] != b'\r\n'): 
-                s += sock.recv(4196)
+            n = sock.sendto(encoded, addr)
+            self._logger.debug("Sent", n)
+            return n
+        except socket.timeout:
+            self._logger.error("Socket timeout")
+            self._close_socket()
+            return "Server timeout"
+    
+    def receive(self, n=4196):
+        addr, sock = self._init_socket()
+        try:
+            s = sock.recv(n)
             self._logger.debug("Received ({})".format(len(s)), s)
             return s.decode()
         except socket.timeout:
             self._logger.error("Socket timeout")
+            self._close_socket()
             return "Server timeout"
-        finally:
-            sock.close()
-
-    def __getitem__(self, address):
-        return self.modules[address]
 
     @property
     def modules(self):
@@ -43,15 +64,30 @@ class CU4Server:
 
     def ip(self):
         return self._ip
-
-    def __repr__(self):
-        return "<CU4Server ip={}>".format(self._ip)
+    
+    def __getitem__(self, address):
+        return self.modules[address]
 
 
 class CU4ModulesList(object):
     def __init__(self, cu4server):
-        self._cu4server = cu4server
+        self._scpi = SCPI(cu4server)
         self._modules = {}
+
+    def add_address(self, n):
+        self._add(n)
+        self.save()
+
+    def add_addresses(self, ns):
+        for n in ns:
+            self._add(n)
+        self.save()
+
+    def _add(self, n):
+        self._scpi.set(["SYST", "DEVL", "ADD"], [str(n)])
+
+    def save(self):
+        self._scpi.set(["SYST", "DEVL", "SAVE"], [])
 
     def __getitem__(self, address):
         return self._enumerate_modules()[address]
@@ -61,7 +97,7 @@ class CU4ModulesList(object):
 
     def _enumerate_modules(self):
         if not self._modules:
-            devsb = self._cu4server.send_scpi("SYST:DEVL?").strip().split("\r\n;<br>")
+            devsb = self._scpi.get(["SYST", "DEVL"])
             for a, m in map(self._dev_from_string, devsb[1:]):
                 self._modules[a] = m
         return self._modules
@@ -70,14 +106,13 @@ class CU4ModulesList(object):
         params = s.split(": ")
         address = int(params[1][8:])
         dev_type = params[2][5:]
-        return address, cu4Module(dev_type, self._cu4server, address)
+        return address, cu4Module(dev_type, self._scpi, address)
 
     def __str__(self):
         return "[{}]".format(", ".join(map(str, self._enumerate_modules().values())))
 
 
-def cu4Module(dev_type, cu4server, address):
-    scpi = SCPI(cu4server)
+def cu4Module(dev_type, scpi, address):
     part = dev_type[:7]
     if part == "CU4SDM0":
         dev = CU4SDM0
