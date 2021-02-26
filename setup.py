@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='cu4python',
+    name='CU4lib',
     version=0.1,
     author='Konstantin Gorshkov',
     author_email='k.n.gorshkov@gmail.com',
