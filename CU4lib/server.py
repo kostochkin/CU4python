@@ -65,15 +65,15 @@ class CU4ServersList:
             
             from CU4lib import *
 
-            l = Cu4ServersList()
+            l = CU4ServersList()
             for server in l:
                 print(server)
                 # Each server represents an CU4 modular system:
                 for module in server.modules:
                     print(module)
 
-            # Cu4ServersList also support indexing:
-            l = Cu4ServersList()
+            # CU4ServersList also support indexing:
+            l = CU4ServersList()
             cu_ip = "127.0.0.1"
             # get all modules:
             print(l[cu_ip].modules)
