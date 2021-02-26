@@ -9,3 +9,5 @@ from CU4lib.devices.components.comparator import CU4Comparator
 from CU4lib.devices.components.counter import CU4Counter
 from CU4lib.devices.components.pressure import CU4PressureMeterVoltage, CU4PressureMeter
 from CU4lib.devices.components.thermometer import CU4Thermometer, CU4ThermometerM1
+
+__version__ = '0.1'

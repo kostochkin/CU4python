@@ -230,8 +230,8 @@ def cu4Module(dev_type, cu4server, address):
     part = dev_type[:7]
     if part == "CU4SDM0":
         dev = CU4SDM0
-#    elif part == "CU4TDM0":
-#        dev = CU4TDM0
+    elif part == "CU4TDM0":
+        dev = CU4TDM0
     elif part == "CU4TDM1":
         dev = CU4TDM1
     else:

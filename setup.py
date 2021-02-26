@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+import CU4lib
 
 setup(
     name='CU4lib',
-    version=0.1,
+    version=CU4lib.__version__,
     author='Konstantin Gorshkov',
     author_email='k.n.gorshkov@gmail.com',
     project_urls={
