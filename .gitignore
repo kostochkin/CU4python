@@ -1,2 +1,8 @@
 __pycache__
+build
+_build
+_static
+_templates
+dist
+CU4lib.egg-info
 *.pyc
