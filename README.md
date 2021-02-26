@@ -12,9 +12,11 @@ Python 2.7 and higher
     $ cd cu4python
 
 With pip:
+
     $ pip install .
 
 Without pip:
+
     $ python setup.py build
     $ sudo python setup.py install
 
