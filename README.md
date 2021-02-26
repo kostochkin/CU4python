@@ -67,7 +67,7 @@ This class inteded to find the Control Unit on local network.
 
 # References
 
-* cu4lib/test/example.py
+* test/example.py
 * Manuals: https://www.scontel.ru/index/manuals/
 * SCPI interface: https://www.scontel.ru/wp-content/uploads/2020/08/Commands-CU.pdf
 * Scontel site: https://www.scontel.ru

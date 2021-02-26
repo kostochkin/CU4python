@@ -109,8 +109,9 @@ class Cu4ServersList:
                     new_dict.update(self._incoming_to_servers_dict(tcpsocket))
                 except socket.timeout:
                     if not new_dict:
-                        addr = "127.0.0.1"
-                        new_dict[addr] = CU4Server(ip=HostIp(addr), port=self._base_port, logger=self._logger)
+                        # For testing
+                        # addr = "127.0.0.1"
+                        # new_dict[addr] = CU4Server(ip=HostIp(addr), port=self._base_port, logger=self._logger)
                         self._logger.warn("Servers not found")
                     break
         finally:

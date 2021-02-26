@@ -6,7 +6,7 @@ import CU4lib.devices.td.m0 as m
 import CU4lib.devices.sd.m0 as sspd
 
 # Mock tests
-from CU4lib.test.mockm1server import CU4TM1ServerMock
+from test.mockm1server import CU4TM1ServerMock
 from CU4lib.devices.td.m1 import CU4TDM1
 from CU4lib.servers.cu4module_server import CU4ModuleServer, SCPI
 
