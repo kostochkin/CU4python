@@ -1,4 +1,4 @@
-from CU4lib.server import *
+from CU4lib.servers import *
 from CU4lib.simplelog import StdioLogger
 from CU4lib.devices.components.descriptors import CU4ValueError
 
@@ -7,7 +7,8 @@ import CU4lib.devices.sd as sspd
 
 # Mock tests
 from test.mockm1server import CU4TM1ServerMock
-from CU4lib.devices.td.m1 import CU4TDM1
+from CU4lib.devices.td import CU4TDM1, CU4TDM0
+from CU4lib.devices.sd import CU4SDM1, CU4SDM0
 from CU4lib.servers.cu4module_server import CU4ModuleServer, SCPI
 
 tdm1 = CU4TDM1(CU4ModuleServer(SCPI(CU4TM1ServerMock()), 0, "CU4TDM1"))
