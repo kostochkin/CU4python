@@ -15,7 +15,11 @@ With pip:
 
     $ pip install .
 
-Without pip:
+With easy-install:
+
+    $ sudo easy_install .
+
+Or:
 
     $ python setup.py build
     $ sudo python setup.py install
