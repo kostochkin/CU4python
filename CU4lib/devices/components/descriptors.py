@@ -137,9 +137,6 @@ class CU4ReadOnly(object):
         self.__doc__ = self._v._cu4_type + " (read-only)"
 
     def __set_name__(self, o, n):
-        print("-----------")
-        print(o, n)
-        print("-----------")
         self._v.__set_name__(o, n)
 
     def __get__(self, o, n=None):
