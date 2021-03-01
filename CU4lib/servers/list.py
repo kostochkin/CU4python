@@ -41,7 +41,7 @@ class CU4ServersList:
         return self._dict
 
     def __getitem__(self, ip_addr):
-        if ip_addr in self._dict:
+        if ip_addr in self.value():
             return self._dict[ip_addr]
         else:
             return CU4Server(ip=HostIp(ip_addr), port=self._base_port, logger=self._logger)
