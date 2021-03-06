@@ -9,9 +9,13 @@ import CU4lib.devices.sd as sspd
 from test.mockm1server import CU4TM1ServerMock
 from CU4lib.devices.td import CU4TDM1, CU4TDM0
 from CU4lib.devices.sd import CU4SDM1, CU4SDM0
-from CU4lib.servers.cu4module_server import CU4ModuleServer, SCPI
+from CU4lib.servers.cu4module_server import CU4Messenger, DEV, DEVT, GEN, CU4CommandMessenger
+from CU4lib.servers.scpi import SCPI, COM
 
-tdm1 = CU4TDM1(CU4ModuleServer(SCPI(CU4TM1ServerMock()), 0, "CU4TDM1"))
+cu4mess = CU4Messenger(SCPI(CU4TM1ServerMock()))
+gen = CU4CommandMessenger(GEN() & DEV(0), cu4mess)
+dev = CU4CommandMessenger(DEVT("CU4TDM1") & DEV(0), cu4mess)
+tdm1 = CU4TDM1(gen, dev, 1)
 print(tdm1.thermometer1.temperature)
 print(tdm1.thermometer2.temperature)
 print(tdm1.thermometer3.temperature)
@@ -41,13 +45,43 @@ except CU4ValueError:
     
 # End mock
 
+# preparing test server
 
-for x in range(0, 1):
-    servers = CU4ServersList(logger=StdioLogger())
+servers = CU4List(logger=StdioLogger())
 
-    #print(servers)
-    s = servers["127.0.0.1"]
-    s.modules.add_addresses([0, 1, 2])
+s = servers["127.0.0.1"]
+s.add_modules([0, 1, 2])
+
+# end of preparing
+
+# broken server
+
+from .mockbrokenserver import BrokenCU4Server
+
+brokenserv = BrokenCU4Server(HostIp("127.0.0.1"), logger=StdioLogger())
+brokenserv.set_probability(0.7937)
+cu4mess = CU4Messenger(SCPI(brokenserv), attempts=3)
+gen = CU4CommandMessenger(GEN() & DEV(0), cu4mess)
+dev = CU4CommandMessenger(DEVT("CU4TDM0") & DEV(0), cu4mess)
+tdm0 = CU4TDM1(gen, dev, 0)
+
+fails = 0
+trues = 0
+
+for x in range(10):
+    tdm0.data
+    if tdm0.action_failed:
+        fails += 1
+    else:
+        trues += 1
+
+print(abs(fails - trues))
+print(abs(fails - trues) < 50)
+
+# end of broken server
+
+for x in range(0, 20):
+    servers = CU4List(logger=StdioLogger())
     print(s.modules)
     for d in s.modules:
         d.init()

@@ -11,11 +11,11 @@ class CU4Counter(CU4ComponentContainer):
 
         Properties
         ----------
-        counts : float
+        counts : float | None
             receiving of the number of samples
-        enabled : bool
+        enabled : bool | None
             enable/disable the counter
-        time_constant : float
+        time_constant : float | None
             counter time constant
     """
     counts = CU4ReadOnly(CU4FloatValue("COUN"))

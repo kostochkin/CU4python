@@ -13,13 +13,13 @@ class CU4AutoRecovery(CU4ComponentContainer):
         
         Properties
         ----------
-        enabled : bool
+        enabled : bool | None
             enable/disable component
-        threshold : float
+        threshold : float | None
             the activation voltage of the auto recovery system
-        timeout : float
+        timeout : float | None
             the time constant of the auto-recovery system
-        counts : int
+        counts : int | None
             the number of automatic recovery system triggers
 
         API

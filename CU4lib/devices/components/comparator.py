@@ -8,11 +8,11 @@ from CU4lib.devices.components.descriptors import (
 class CU4Comparator(CU4ComponentContainer):
     """ CU4Comparator
 
-        Parameters
+        Properties
         ----------
-        enabled : bool
+        enabled : bool | None
             enable/disable the comparator
-        level : float
+        level : float | None
             the value of the trigger level for comparator
     """
     enabled = CU4BoolValue("CLE")

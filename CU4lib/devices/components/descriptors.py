@@ -1,5 +1,7 @@
 import json
 import sys
+from ...servers.scpi import COM
+from ..data_storage import Data
 
 
 class CU4ComponentError(Exception):
@@ -23,7 +25,7 @@ class CU4Component(object):
 
     def __get__(self, o, t=None):
         if not hasattr(o._components, self._name):
-            setattr(o._components, self._name, self._c_class(o._serv, self._channel))
+            setattr(o._components, self._name, self._c_class(o._genserv, o._devserv, o._address, self._channel))
         return getattr(o._components, self._name)
 
     def __set__(self, o, v):
@@ -33,20 +35,32 @@ class CU4Component(object):
 class CU4String(object):
     _cu4_type = "string"
 
+    def _from_str(self, x):
+        return x
+
+    def _to_str(self, x):
+        return x
+
     def __init__(self, cmd):
         self._cmd = cmd
         self._name = None
         self._gen = False
-        self.__doc__ = self._cu4_type
+        self.__doc__ = self._cu4_type + " | None "
 
     def __set_name__(self, o, n):
         self._name = n
 
     def __get__(self, o, n=None):
-        return o._serv.get([self._channelize(o)], gen=self._gen)[0]
+        v = self._select_serv(o).get(COM(self._channelize(o)))[0]
+        return v and self._from_str(v)
 
     def __set__(self, o, v):
-        o._serv.set([self._channelize(o)], [v], gen=self._gen)
+        self._select_serv(o).set(COM(self._channelize(o)), self._to_str(v))
+
+    def _select_serv(self, o):
+        o._lastserv = o._genserv if self._gen else o._devserv
+        return o._lastserv
+
 
     def _channelize(self, o):
         if o._channel is None:
@@ -72,37 +86,37 @@ class CU4Gen(object):
 
 
 class CU4DictValue(CU4String):
-    _cu4_type = " dict (with JSON repr) "
+    _cu4_type = " dict "
 
-    def __get__(self, o, n=None):
-        return json.loads(super(self.__class__, self).__get__(o, n))
+    def _from_str(self, x):
+        return json.loads(x)
 
-    def __set__(self, o, v):
-        return super(self.__class__, self).__set__(o, json.dumps(v))
+    def _to_str(self, x):
+        return json.dumps(x)
 
 
 class CU4BoolValue(CU4String):
     _cu4_type = " bool "
+    
+    def _from_str(self, x):
+        return bool(int(x))
 
-    def __get__(self, o, n=None):
-        return bool(int(super(self.__class__, self).__get__(o, n)))
-
-    def __set__(self, o, v):
-        return super(self.__class__, self).__set__(o, str(int(v)))
+    def _to_str(self, x):
+        return str(int(x))
 
 
 class CU4IntValue(CU4String):
     _cu4_type = " int "
 
-    def __get__(self, o, n=None):
-        return round(float(super(self.__class__, self).__get__(o, n)))
+    def _from_str(self, x):
+        return round(float(x))
 
-    def __set__(self, o, v):
-        return super(self.__class__, self).__set__(o, str(v))
+    def _to_str(self, x):
+        return str(x)
 
 
 class CU4BitValue(CU4IntValue):
-    _cu4_type = " bit (False | True) "
+    _cu4_type = " bool "
 
     def __init__(self, cmd, b):
         super(self.__class__, self).__init__(cmd)
@@ -110,10 +124,14 @@ class CU4BitValue(CU4IntValue):
         self._nbit = ~self._bit
    
     def __get__(self, o, n=None):
-        return bool(super(self.__class__, self).__get__(o, n) & self._bit)
+        v = super(self.__class__, self).__get__(o, n) & self._bit
+        return v and bool(v & self._bit)
 
     def __set__(self, o, v):
-        i = super(self.__class__, self).__get__(o, None)
+        v = super(self.__class__, self).__get__(o, None)
+        v and self._set_bit(v)
+
+    def _set_bit(self, v):
         if v:
             i |= self._bit
         else:
@@ -124,11 +142,11 @@ class CU4BitValue(CU4IntValue):
 class CU4FloatValue(CU4String):
     _cu4_type = " float "
 
-    def __get__(self, o, n=None):
-        return float(super(self.__class__, self).__get__(o, n))
+    def _from_str(self, x):
+        return float(x)
 
-    def __set__(self, o, v):
-        return super(self.__class__, self).__set__(o, str(v))
+    def _to_str(self, x):
+        return str(x)
 
 
 class CU4ReadOnly(object):
@@ -170,17 +188,26 @@ class Components(object):
 
 
 class CU4ComponentContainer(object):
-    def __init__(self, scpi_serv, channel=None):
+    def __init__(self, genserv, devserv, address, channel=None):
         """ Parameters
             ----------
-            :scpi_serv SCPI:
+            scpi_serv : CU4ModuleServer
+            action_failed : bool
+                Is True if the last action failed
+
         """
-        self._serv = scpi_serv
+        self._genserv = genserv
+        self._devserv = devserv
+        self._lastserv = self._genserv
+        self._address = address
         self._components = Components()
         self._channel = channel
         if sys.version_info[0] < 3:
             self._set_names_python2()
 
+    @property
+    def action_failed(self):
+        return self._lastserv.action_failed
 
     def _set_override_ro(self, name, v):
         for cls in self.__class__.mro():
@@ -203,31 +230,37 @@ class CU4Module(CU4ComponentContainer):
         
         Properties
         ----------
-        data : dict
-            Receiving all data
-        id : str
+        data : Data | None
+            Receiving all data. Returns corresponding Data object.
+        id : str | None
             Device unique id
-        last_error : str
+        last_error : str | None
             Receiving the last error
 
         Api
         ---
-        init() : None
+        init() : Bool | None
             Module hardware initialization
-        reboot() : None
+        reboot() : Bool | None
             Reboot the module
     """
-    data = CU4ReadOnly(CU4DictValue("DATA"))
     id = CU4ReadOnly(CU4Gen(CU4String("DID")))
     last_error = CU4ReadOnly(CU4Gen(CU4String("ERR")))
+    _data = CU4ReadOnly(CU4DictValue("DATA"))
+    _data_class = Data
+
+    @property
+    def data(self):
+        d = self._data
+        return d and self._data_class(d)
 
     def init(self):
         """ Module hardware initialization """
-        self._serv.set(["INIT"], [], gen=True)
+        return self._genserv.set(COM("INIT"))
     
     def reboot(self):
         """ Reboot module  """
-        self._serv.set(["BOOT"], [], gen=True)
+        return self._genserv.set(COM("BOOT"))
     
     def __str__(self):
         if self.__class__ == CU4Module:
@@ -236,4 +269,4 @@ class CU4Module(CU4ComponentContainer):
             name = self.__class__.__name__
         return "<{} address={}>".format(
                 name,
-                self._serv.bus_address)
+                self._address)

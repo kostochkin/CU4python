@@ -8,7 +8,7 @@ class CU4Amplifier(CU4ComponentContainer):
         
         Properties
         ----------
-        enabled : bool
+        enabled : bool | None
             enable/disable amplifier
     """
     enabled = CU4BoolValue("AMPE")

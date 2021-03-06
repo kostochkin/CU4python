@@ -27,3 +27,15 @@ class CU4TDM1(CU4Module):
     thermometer2 = CU4Component(CU4ThermometerM1, 1)
     thermometer3 = CU4Component(CU4ThermometerM1, 2)
     thermometer4 = CU4Component(CU4ThermometerM1, 3)
+
+
+#class CU4TDM1Data(DataStorage):
+#    def __init__(self, data):
+#        thermomter = {"temperature": "Temperature",
+#                      "current": "Current",
+#                      "voltage": "Voltage"}
+#        paths = {"thermometer1": thermometer,
+#                 "thermometer2": thermometer,
+#                 "thermometer3": thermometer,
+#                 "thermometer4": thermometer}
+#        super(CU4TDM0Data, self).__init__(paths, data)

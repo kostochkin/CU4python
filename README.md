@@ -26,16 +26,20 @@ Or:
 
 ## Module classes
 
-These classes representing available modules are:
+
+These classes representing available CU4 modules are:
 
 - class CU4TDM0
 - class CU4TDM1
 - class CU4SDM0
 - class CU4SDM1
 
+They provide API to corresponding hardware modules.
+Note that sometimes data may be lost in transition. In this case the value of a property will be None.
+
 Each class has own docstrings. Use help() function to get description of these classes.
 
-### Example
+### Examples
 
     > import CU4lib as cu
     > help(cu.CU4TDM0)
@@ -66,11 +70,10 @@ This class inteded to find the Control Unit on local network.
 
     import CU4lib as cu
 
-    for server in cu.CU4ServersList(host_ip=cu.HostIp()):
-        print(server)
-        for module in server:
+    for unit in cu.CU4List(host_ip=cu.HostIp()):
+        print(unit)
+        for module in unit:
             print(module)
-
 
 # References
 

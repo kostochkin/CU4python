@@ -11,9 +11,9 @@ class CU4PressureMeterVoltage(CU4ComponentContainer):
         
         Properties
         ----------
-        positive : float
+        positive : float | None
             a voltage from the postive pressure sensor contact.
-        negative : float
+        negative : float | None
             a voltage from the negative pressure sensor contact.
     """
     positive = CU4ReadOnly(CU4FloatValue("PRVP"))
@@ -25,7 +25,7 @@ class CU4PressureMeter(CU4ComponentContainer):
         
         Properties
         ----------
-        pressure : float
+        pressure : float | None
             get current pressure value
         voltage : CU4PressureMeterVoltage
             intended to get voltage from sesnor contacts
