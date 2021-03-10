@@ -34,7 +34,7 @@ class CU4SDM1Data(Data):
                     "enabled": bool(status["ComparatorEnable"])},
                  "counter": {
                     "counts": data["Counts"],
-                    "enabled": status["CounterEnable"]}}
+                    "enabled": bool(status["CounterEnable"])}}
 
 
 class CU4SDM1(CU4Module):
