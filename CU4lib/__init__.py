@@ -5,6 +5,7 @@ from .devices.components import (
         CU4Amplifier,
         CU4AutoRecovery,
         CU4CurrentBias,
+        CU4CurrentHFBias,
         CU4Comparator,
         CU4Counter,
         CU4PressureMeterVoltage,
