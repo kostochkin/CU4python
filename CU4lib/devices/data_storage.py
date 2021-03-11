@@ -11,7 +11,7 @@ class Data(object):
             else:
                 return o
 
-    def __str__(self):
+    def __repr__(self):
         f = self._flat()
         s = map(lambda d: "{}={}".format(".".join(d[0]), d[1]), f)
         return "<{} [{}]>".format(self._path, ", ".join(s))
