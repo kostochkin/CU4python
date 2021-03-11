@@ -35,6 +35,7 @@ class CU4SDM1Data(Data):
                  "counter": {
                     "counts": data["Counts"],
                     "enabled": bool(status["CounterEnable"])}}
+        super(CU4SDM1Data, self).__init__(dicts)
 
 
 class CU4SDM1(CU4Module):
