@@ -45,9 +45,9 @@ class CU4TDM1(CU4Module):
         switch_ac() : None
             Switch to Ac mode
         switch_connect() : None
-            Switch to Connected mode
+            Switch to Connect mode
         switch_disconnect() : None
-            Switch to Disconnected mode
+            Switch to Disconnect mode
     """
     thermometer1 = CU4Component(CU4ThermometerM1, 0)
     thermometer2 = CU4Component(CU4ThermometerM1, 1)
