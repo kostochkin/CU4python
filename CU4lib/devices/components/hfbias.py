@@ -35,7 +35,7 @@ class CU4CurrentHFBias(CU4ComponentContainer):
     @property
     def current(self):
         if self._hf_enabled_cache is None:
-            self._hf_enabled_cache = hf_enabled
+            self._hf_enabled_cache = self.hf_enabled
             if self.action_failed:
                 return None
         if self._hf_enabled_cache:
