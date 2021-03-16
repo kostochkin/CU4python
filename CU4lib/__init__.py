@@ -20,4 +20,4 @@ class CU4ServersList(CU4List):
     pass
 
 
-__version__ = '0.3'
+__version__ = '0.4'
