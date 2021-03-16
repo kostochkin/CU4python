@@ -95,6 +95,19 @@ class CU4DictValue(CU4String):
         return json.dumps(x)
 
 
+class CU4DataObject(CU4DictValue):
+    def __init__(self, data_class, *args, **kwargs):
+        super(CU4DataObject, self).__init__(*args, **kwargs)
+        self._data_class = data_class
+
+    def _from_str(self, x):
+        v = super(CU4DataObject, self)._from_str(x)
+        return v and self._data_class(v)
+
+    def _to_str(self, o):
+        return super(CU4DataObject, self)._from_str(str(o))
+
+
 class CU4BoolValue(CU4String):
     _cu4_type = " bool "
     
@@ -230,8 +243,6 @@ class CU4Module(CU4ComponentContainer):
         
         Properties
         ----------
-        data : Data | None
-            Receiving all data. Returns corresponding Data object.
         id : str | None
             Device unique id
         last_error : str | None
@@ -246,13 +257,6 @@ class CU4Module(CU4ComponentContainer):
     """
     id = CU4ReadOnly(CU4Gen(CU4String("DID")))
     last_error = CU4ReadOnly(CU4Gen(CU4String("ERR")))
-    _data = CU4ReadOnly(CU4DictValue("DATA"))
-    _data_class = Data
-
-    @property
-    def data(self):
-        d = self._data
-        return d and self._data_class(d)
 
     def init(self):
         """ Module hardware initialization """

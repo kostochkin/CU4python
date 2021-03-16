@@ -3,6 +3,8 @@ class SCPIError(Exception):
 
 
 class SCPI:
+    """ Encapsulates SCPI requests
+    """
     def __init__(self, transport):
         self._t = transport
 
@@ -38,7 +40,39 @@ class UnsupportedType(Exception):
 
 
 class COM(object):
-    """ SCPI Command """
+    """ Encapsulates SCPI Command part
+
+    Constructor params
+    ------------------
+
+    cmd : str
+
+    API
+    ---
+    query() : str
+        Returns query command string from current command part
+
+    set(*args : [str]) : str
+        Returns set command string from current command part
+
+    & : COM
+        Concatenate commands parts
+
+    Example
+    -------
+
+    .. code-block:: python
+
+        >>> comA = COM("A")
+        >>> comB = COM("B")
+        >>> comAB = comA & comB
+        >>> print(comAB)
+        A:B
+        >>> print(comAB.query())
+        A:B?
+        >>> print(comAB.set("1","2","3"))
+        A:B 1,2,3
+    """
     def __init__(self, cmd=None):
         if type(cmd) == list:
             self._cmd_l = cmd
@@ -58,4 +92,3 @@ class COM(object):
 
     def __str__(self):
         return ":".join(self._cmd_l)
-

@@ -1,20 +1,17 @@
 import socket
 from ..simplelog import EmptyLogger
 
+
 class HostIp:
     """ 
         It encapsulates or autodetect ip address of the host.
         
         .. code-block:: python
             
-            from CU4lib import *
-
-            # Autodetection
-            h = HostIp() 
-            print(h)
-            # Encapsualting
-            h = HostIp("123.456.789.101")
-            print(h)
+            >>> h1 = HostIp() # Autodetection
+            >>> h2 = HostIp("123.456.789.101")
+            >>> print(h2)
+            <ManualIP=123.456.789.101>
     """
     def __init__(self, addr=None, logger=None):
         self._ip = addr
@@ -50,4 +47,3 @@ class HostIp:
         else:
             a = "Manual"
         return "<{}IP={}>".format(a, v)
-

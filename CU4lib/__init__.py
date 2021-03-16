@@ -5,6 +5,7 @@ from .devices.components import (
         CU4Amplifier,
         CU4AutoRecovery,
         CU4CurrentBias,
+        CU4CurrentHFBias,
         CU4Comparator,
         CU4Counter,
         CU4PressureMeterVoltage,
@@ -19,4 +20,4 @@ class CU4ServersList(CU4List):
     pass
 
 
-__version__ = '0.3'
+__version__ = '0.4'

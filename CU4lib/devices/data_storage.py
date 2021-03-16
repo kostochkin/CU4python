@@ -1,4 +1,21 @@
 class Data(object):
+    """ Converts dict to a nested object
+
+    Example
+    -------
+
+    .. code-block:: python
+
+        >>> o = Data({"a": {"b": {"c": 1, "d": 2}, "e": 3}, "f": 4})
+        >>> print(o)
+        <Data [a.b.c=1, a.b.d=2, a.e=3, f=4]>
+        >>> print(o.a)
+        <Data.a [b.c=1, b.d=2, e=3]>
+        >>> print(o.a.b)
+        <Data.a.b [c=1, d=2]>
+        >>> print(o.a.e)
+        3
+    """
     def __init__(self, dict, path=None):
         self._d = dict
         self._path = path or "Data"
@@ -11,7 +28,7 @@ class Data(object):
             else:
                 return o
 
-    def __str__(self):
+    def __repr__(self):
         f = self._flat()
         s = map(lambda d: "{}={}".format(".".join(d[0]), d[1]), f)
         return "<{} [{}]>".format(self._path, ", ".join(s))

@@ -1,4 +1,4 @@
-from CU4lib.devices.components.descriptors import (
+from .descriptors import (
         CU4ComponentContainer,
         CU4BoolValue,
         CU4FloatValue,
@@ -6,7 +6,8 @@ from CU4lib.devices.components.descriptors import (
         CU4WriteOnly,
         CU4Component
     )
-from CU4lib.devices.components.bias import CU4CurrentBias
+from .bias import CU4CurrentBias
+
 
 class CU4Thermometer(CU4ComponentContainer):
     """ CU4Thermometer 
@@ -32,11 +33,11 @@ class CU4ThermometerM1(CU4ComponentContainer):
         ----------
         temperature : float | None
             current measured temperature
-        current : float | None
-            bias current setter
         voltage : float | None
             bias voltage getter
     """
     temperature = CU4ReadOnly(CU4FloatValue("TEMP"))
-    current = CU4WriteOnly(CU4FloatValue("CURR"))
     voltage = CU4ReadOnly(CU4FloatValue("VOLT"))
+    #    current : float | None
+    #        bias current setter
+    # current = CU4WriteOnly(CU4FloatValue("CURR"))
