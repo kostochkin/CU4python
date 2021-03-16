@@ -2,7 +2,8 @@ from CU4lib.devices.components.thermometer import CU4Thermometer
 from CU4lib.devices.components.pressure import CU4PressureMeter
 from CU4lib.devices.components.descriptors import (
         CU4Module,
-        CU4Component
+        CU4Component,
+        CU4DataObject
     )
 from ..data_storage import Data
 
@@ -39,6 +40,8 @@ class CU4TDM0(CU4Module):
         
         Properties
         ----------
+        data : CU4TDM0Data | None
+            Receiving all data.
         thermometer : CU4Thermometer
             The thermometer component of the module
         pressure_meter : CU4PressureMeter
@@ -46,6 +49,4 @@ class CU4TDM0(CU4Module):
     """
     thermometer = CU4Component(CU4Thermometer)
     pressure_meter = CU4Component(CU4PressureMeter)
-    _data_class = CU4TDM0Data
-
-
+    data = CU4DataObject(CU4TDM0Data, "DATA")

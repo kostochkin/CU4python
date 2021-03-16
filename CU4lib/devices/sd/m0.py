@@ -2,7 +2,8 @@ from CU4lib.devices.components.descriptors import (
         CU4Module,
         CU4Component,
         CU4BoolValue,
-        CU4ReadOnly
+        CU4ReadOnly,
+        CU4DataObject
     )
 from ..components.bias import CU4CurrentBias
 from ..components.comparator import CU4Comparator
@@ -45,6 +46,8 @@ class CU4SDM0(CU4Module):
 
         Properties
         ----------
+        data : CU4SDM0Data | None
+            Receiving all data.
         bias : CU4CurrentBias
             a CU4CurrentBias instance
 
@@ -78,7 +81,7 @@ class CU4SDM0(CU4Module):
     amplifier = CU4Component(CU4Amplifier)
     shorted = CU4BoolValue("SHOR")
     is_cmp = CU4ReadOnly(CU4BoolValue("RFKC"))
-    _data_class = CU4SDM0Data
+    data = CU4DataObject(CU4SDM0Data, "DATA")
 
     def switch_to_amp_out(self):
         """ Switching between amp and cmp outputs """

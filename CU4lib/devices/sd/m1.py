@@ -2,6 +2,7 @@ from CU4lib.devices.components.descriptors import (
         CU4Module,
         CU4Component,
         CU4BoolValue,
+        CU4DataObject
     )
 from ..components.hfbias import CU4CurrentHFBias
 from ..components.comparator import CU4Comparator
@@ -44,6 +45,8 @@ class CU4SDM1(CU4Module):
 
         Properties
         ----------
+        data : CU4SDM1Data | None
+            Receiving all data.
         bias : CU4CurrentHFBias
             a CU4CurrentHFBias instance
 
@@ -65,4 +68,4 @@ class CU4SDM1(CU4Module):
     auto_recovery = CU4Component(CU4AutoRecovery)
     amplifier = CU4Component(CU4Amplifier)
     shorted = CU4BoolValue("SHOR")
-    _data_class=CU4SDM1Data
+    data = CU4DataObject(CU4SDM1Data, "DATA")
