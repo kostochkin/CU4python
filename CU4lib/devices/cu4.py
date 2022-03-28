@@ -54,10 +54,9 @@ class CU4(object):
         return self._modules
     
     def _cached_module(self, address):
-        if address not in self._modules:
-            if address in self._enumerate_modules():
-                return self._modules[address]
-        raise ModuleNotInstalled("Address={}".format(address))
+        if address not in self._modules and not in self._enumerate_modules():
+            raise ModuleNotInstalled("Address={}".format(address))
+        return self._modules[address]
 
     def _enumerate_modules(self):
         self._modules = {}
